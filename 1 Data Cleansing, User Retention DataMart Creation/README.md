@@ -123,7 +123,7 @@ where (o."name" <> p."name"
 Для полей paypment, bonus_payment, cost, bonus_grant нет ограничений на положительные значения.
 Проверим их запросом:
 ```sql
-select t.*
+select t.bonus_payment, t.payment, t."cost", t.bonus_grant
 from orders t
 where t.bonus_payment <0 or t.payment <=0 or t."cost" <=0 or t.bonus_grant <= 0
 ```
@@ -296,7 +296,7 @@ having count(1) > 1
 Сделаем проверку на его заполненность запросом
 
 ```sql
-select u.*
+select u."name"
 from users u
 where coalesce(u."name", '') = ''
 ```
@@ -306,7 +306,7 @@ where coalesce(u."name", '') = ''
 
 Cделаем это запросом:
 ```sql
-select t.*
+select t.user_id
 from production.orders t
 where t.user_id not in (select "id" from production.users)
 ```
