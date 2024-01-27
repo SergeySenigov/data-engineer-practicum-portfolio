@@ -44,3 +44,21 @@
 - PostgreSQL  
 - cloudbeaver   
 
+
+## [4. DWH With Multiple Sources, DataMart Creation](</4 DWH With Multiple Sources, DataMart Creation/README.md>)
+
+### **Цели проекта**  
+
+- Усовершенствовать хранилище данных: добавить новый источник и витрину. Данные из нового источника необходимо связать с данными, которые уже лежат в хранилище.  
+
+- Реализовать витрину для расчётов с курьерами.  
+
+### **Используемые технологии**
+- AirFlow  
+- ETL    
+- SQL  
+- MongoDB
+- MongoDB Compass
+- PostgreSQL  
+- cloudbeaver   
+
