@@ -12,7 +12,7 @@
 - PostgreSQL  
 - cloudbeaver   
 
-## [2. DWH, DataModel Review and Migration to New Model](</2 DWH, DataModel Review and Migration to New Model/README.md>)
+## [2. DWH, DataModel Review and Migration to New Model](</2 DWH, DataModel Review, Migration to New Model/README.md>)
 
 - Провести миграцию данных в отдельные логические таблицы  
 
