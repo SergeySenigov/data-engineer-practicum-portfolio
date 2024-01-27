@@ -8,7 +8,8 @@ AirFlow
 ETL    
 SQL  
 PostgreSQL  
-MongoDB
+MongoDB  
+MongoDB Compass  
 cloudbeaver    
 
 ## **Постановка задачи**
