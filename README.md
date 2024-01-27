@@ -78,6 +78,7 @@
 - MongoDB Compass
 - PostgreSQL  
 - cloudbeaver   
+- Jupyter Notebook
 
 ## [6. Analytical DataBases, Vertica](</6 Analytical DataBases, Vertica/README.md>)
 
@@ -95,4 +96,21 @@
 - SQL  
 - Vertica
 - cloudbeaver  
+
+## [7. Spark, Data Lake with Hadoop, HDFS](</7 Spark, Data Lake with Hadoop, HDFS/README.md>)
+
+## **Цели проекта**  
+
+- Обновить, дополнить структуру данных в Data Lake (Hadoop, HDFS)
+- Создать новые витрины данных в HDFS с помощью PySpark, автоматизировать их обновление
+
+## **Используемые технологии и инструменты**
+
+- PySpark  
+- SQL  
+- Window Functions  
+- Hadoop  
+- HDFS  
+- Airflow  
+- Jupyter Notebook
 

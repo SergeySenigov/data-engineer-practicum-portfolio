@@ -11,6 +11,7 @@ PostgreSQL
 MongoDB  
 MongoDB Compass  
 cloudbeaver    
+Jupyter Notebook  
 
 ## **Постановка задачи**
 
