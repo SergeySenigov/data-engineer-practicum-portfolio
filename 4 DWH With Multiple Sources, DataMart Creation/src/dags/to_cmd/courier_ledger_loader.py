@@ -145,9 +145,6 @@ class CourierLedgerLoader:
 
             # Вычитываем очередную пачку объектов.
             last_loaded = wf_setting.workflow_settings[self.WF_MAX_LOADED_TS_KEY]
-            #last_loaded = -1
-            #self.log.info(f'last_loaded = {last_loaded}')
-            #self.log.info(f'BATCH_LIMIT = {self.BATCH_LIMIT}')
             load_queue = self.dds.list_objects(last_loaded, self.BATCH_LIMIT)
             self.log.info(f"Found {len(load_queue)} courier ledger lines to load.")
             if not load_queue:
@@ -174,6 +171,5 @@ class CourierLedgerLoader:
             self.settings_repository.save_setting(conn, wf_setting.workflow_key, wf_setting_json)
             
             self.log.info(f"Load finished on {wf_setting.workflow_settings[self.WF_MAX_LOADED_TS_KEY]}")
-            #self.log.info(f"Load finished on {wf_setting.workflow_settings[self.WF_LOADED_LEDGER_LINES_KEY]}")
 
 

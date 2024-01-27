@@ -139,7 +139,6 @@ class ProductSalesLoader:
 
             # Сохраняем объекты в базу dwh.
             for object in load_queue:
-                #print(object)
                 try:
                     self.dds.insert_object(conn, object)
                 except Exception as err:

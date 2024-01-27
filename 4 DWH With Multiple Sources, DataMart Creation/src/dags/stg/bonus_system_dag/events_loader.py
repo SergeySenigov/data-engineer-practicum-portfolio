@@ -93,7 +93,6 @@ class EventsLoader:
 
             # Сохраняем объекты в базу dwh.
             for event in load_queue:
-                #print(event)
                 self.stg.insert_event(conn, event)
 
             # Сохраняем прогресс.

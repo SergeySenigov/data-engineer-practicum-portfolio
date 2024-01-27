@@ -34,7 +34,7 @@ def psql_to_stg_bonus_system_ranks_dag():
 
     # Далее задаем последовательность выполнения тасков.
     # Т.к. таск один, просто обозначим его здесь.
-    ranks_dict  # type: ignore
+    ranks_dict  
 
 
 stg_bonus_system_ranks_dag = psql_to_stg_bonus_system_ranks_dag()

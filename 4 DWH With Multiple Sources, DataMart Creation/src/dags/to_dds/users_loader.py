@@ -102,7 +102,6 @@ class UsersLoader:
 
             # Сохраняем объекты в базу dwh.
             for user in load_queue:
-                #print(user)
                 self.dds.insert_user(conn, user)
 
             # Сохраняем прогресс.

@@ -93,7 +93,6 @@ class CouriersLoader:
 
             # Сохраняем объекты в базу dwh.
             for d in load_queue:
-                #print(d)
                 self.dds.insert_object(conn, d)
 
             # Сохраняем прогресс.

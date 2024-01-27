@@ -17,7 +17,6 @@ class ProductObj(BaseModel):
     product_name: str
     product_price: float
     active_from: dt.datetime
-    #active_to: dt.datetime
 
 class ProductsOriginRepository:
     def __init__(self, pg: PgConnect) -> None:

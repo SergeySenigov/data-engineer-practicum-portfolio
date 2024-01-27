@@ -48,11 +48,9 @@ def from_dds_to_cdm_dag():
         rest_loader.load_data()  # Вызываем функцию, которая перельет данные.
 
     # Инициализируем объявленные таски.
-    #res_zdravo = reci_zdravo_task()
     res_settlment = load_settlement_task()
     res_courier_ledger = load_courier_ledger_task()
 
-    #res_zdravo >>
     [res_settlment, res_courier_ledger]
 
 

@@ -56,13 +56,6 @@ class TimestampsDestRepository:
 
     def insert_object(self, conn: Connection, order: TimestampObj) -> None:
 
-        # print (order.order_dt)
-        # print (order.order_dt.strftime('%Y'))
-        # print (order.order_dt.strftime('%m'))
-        # print (order.order_dt.strftime('%d'))
-        # print (order.order_dt.strftime('%H:%M:%S'))
-        # print (order.order_dt.strftime('%Y-%m-%d'))
-
         with conn.cursor() as cur:
             cur.execute(
                 """
@@ -119,7 +112,6 @@ class TimestampsLoader:
 
             # Сохраняем объекты в базу dwh.
             for object in load_queue:
-                #print(object)
                 self.dds.insert_object(conn, object)
 
             # Сохраняем прогресс.

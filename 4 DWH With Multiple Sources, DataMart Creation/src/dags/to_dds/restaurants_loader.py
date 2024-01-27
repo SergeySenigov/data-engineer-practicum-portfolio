@@ -99,7 +99,6 @@ class RestaurantsLoader:
 
             # Сохраняем объекты в базу dwh.
             for restaurant in load_queue:
-                #print(Restaurant)
                 self.dds.insert_restaurant(conn, restaurant)
 
             # Сохраняем прогресс.

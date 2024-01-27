@@ -13,15 +13,11 @@ import datetime as dt
 class OrderObj(BaseModel):
     id: int
     order_id: str
-    #bonus_grant: float 
-    #bonus_payment: float
-    #cost: float
     order_ts: dt.datetime
     final_status: str
     user_id: int
     restaurant_id: int
     timestamp_id: int
-    #update_ts: dt.datetime
 
 class OrdersOriginRepository:
     def __init__(self, pg: PgConnect) -> None:
@@ -65,8 +61,6 @@ class OrdersOriginRepository:
 class OrdersDestRepository:
 
     def insert_object(self, conn: Connection, order: OrderObj) -> None:
-
-        # print (order)
 
         with conn.cursor() as cur:
             cur.execute(
