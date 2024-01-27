@@ -25,7 +25,7 @@ class CouriersOriginRepository():
     def list_couriers(self) -> List[CourierObj]:
 
         objs = list()
-        request_headers = {'X-Nickname': 'senigov', 'X-Cohort': '08', 'X-API-KEY': '25c27781-8fde-4b30-a22e-524044a7580f'}
+        request_headers = {'X-Nickname': 'senigov', 'X-Cohort': 'XX', 'X-API-KEY': 'XXXXXX'}
 
         offset = 0
 

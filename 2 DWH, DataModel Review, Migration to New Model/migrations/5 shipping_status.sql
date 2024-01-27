@@ -18,11 +18,10 @@ with ts as (select s1.shippingid,
 	first_value(s1.state) over (partition by shippingid order by state_datetime desc ) last_state,
 	max(case when s1.state = 'booked' then s1.state_datetime end) over (partition by shippingid) start_dt,
 	max(case when s1.state = 'recieved' then s1.state_datetime end) over (partition by shippingid) end_dt
-	--row_number() over (partition by shippingid order by state_datetime desc ) rown
 	from shipping s1)
-select distinct s.shippingid, ts.last_status, ts.last_state, ts.start_dt, ts.end_dt--, ts.rown
+select distinct s.shippingid, ts.last_status, ts.last_state, ts.start_dt, ts.end_dt
 from shipping s
-left join ts on s.shippingid = ts.shippingid --and ts.rown = 1
+left join ts on s.shippingid = ts.shippingid
 ;
 
 select * from public.shipping_status

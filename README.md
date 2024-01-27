@@ -9,8 +9,9 @@
 
 - Создание витрины данных для RFM-классификации пользователей. 
 
-### **Используемые технологии**
+### **Используемые технологии и инструменты**
 - SQL  
+- Window Functions
 - PostgreSQL  
 - cloudbeaver   
 
@@ -22,8 +23,9 @@
 
 - Собрать на новых таблицах витрину данных
 
-### **Используемые технологии**
+### **Используемые технологии и инструменты**
 - SQL  
+- Window Functions
 - PostgreSQL  
 - cloudbeaver   
 
@@ -37,15 +39,30 @@
 
 - Модифицировать ETL процесс так, чтобы поддерживалась идемпотентность.
 
-### **Используемые технологии**
+### **Используемые технологии и инструменты**
 - AirFlow  
 - ETL    
 - SQL  
 - PostgreSQL  
-- cloudbeaver   
+- cloudbeaver 
 
 
-## [4. DWH With Multiple Sources, DataMart Creation](</4 DWH With Multiple Sources, DataMart Creation/README.md>)
+## [4. Check Data Quality, Check Pipeline](</4 Check Data Quality, Check Pipeline/README.md>)
+
+### **Цели проекта**  
+
+- Определить, на каких этапах процесса внедрить проверки качества данных
+- Разрабатать проверки и внедрить их в процесс
+- Создать таблицу с результатами проверок, отслеживать работу автопроверок
+- Составить инструкции по поддержке процессов с проверками
+
+### **Используемые технологии и инструменты**
+- AirFlow  
+- ETL    
+- SQL  
+- PostgreSQL  
+
+## [5. DWH With Multiple Sources, DataMart Creation](</5 DWH With Multiple Sources, DataMart Creation/README.md>)
 
 ### **Цели проекта**  
 
@@ -53,7 +70,7 @@
 
 - Реализовать витрину для расчётов с курьерами.  
 
-### **Используемые технологии**
+### **Используемые технологии и инструменты**
 - AirFlow  
 - ETL    
 - SQL  
@@ -61,4 +78,21 @@
 - MongoDB Compass
 - PostgreSQL  
 - cloudbeaver   
+
+## [6. Analytical DataBases, Vertica](</6 Analytical DataBases, Vertica/README.md>)
+
+## **Цели проекта**  
+
+- Расширить модель данных
+- Проанализировать новую информацию
+- Разработать для маркетологов витрину данных для оценки эффективности рекламы
+
+### **Используемые технологии и инструменты**
+- AirFlow  
+- ETL    
+- Yandex S3
+- CTL
+- SQL  
+- Vertica
+- cloudbeaver  
 
