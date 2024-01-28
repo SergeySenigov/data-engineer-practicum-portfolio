@@ -6,7 +6,7 @@
 
 ## **Используемые технологии и инструменты**
 AirFlow      
-Yandex S3
+Yandex S3 Storage
 CTL
 SQL  
 Vertica
