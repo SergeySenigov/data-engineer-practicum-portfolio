@@ -5,13 +5,16 @@
 - Разработать для маркетологов витрину данных для оценки эффективности рекламы
 
 ## **Используемые технологии и инструменты**
-AirFlow  
-ETL    
+AirFlow      
 Yandex S3
 CTL
 SQL  
 Vertica
-cloudbeaver    
+cloudbeaver  
+pendulum  
+boto3  
+vertica_python  
+pandas  
 
 ## **Постановка задачи**
 

@@ -33,13 +33,13 @@ def http_to_stg_delivery_system_dag():
 
     @task()
     def laden_couriers_aufgabe(task_id="laden_couriers_id"):
-        url = 'https://d5d04q7d963eapoepsqr.apigw.yandexcloud.net/couriers'
+        url = 'https://XXX.apigw.yandexcloud.net/couriers'
         couriers_lader = CouriersLader(url, dwh_pg_connect, log)
         couriers_lader.laden_couriers()  # Вызываем функцию, которая перельет данные.
 
     @task()
     def laden_deliveries_aufgabe(task_id="load_deliveries_id"):
-        url = 'https://d5d04q7d963eapoepsqr.apigw.yandexcloud.net/deliveries'
+        url = 'https://XXX.apigw.yandexcloud.net/deliveries'
         couriers_lader = DeliveriesLader(url, dwh_pg_connect, log)
         couriers_lader.laden_deliveries()  # Вызываем функцию, которая перельет данные.
 

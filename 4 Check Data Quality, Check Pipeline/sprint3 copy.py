@@ -19,9 +19,7 @@ import logging
 ###API settings###
 #set api connection from basehook
 api_conn = BaseHook.get_connection('create_files_api')
-#d5dg1j9kt695d30blp03.apigw.yandexcloud.net
 api_endpoint = api_conn.host
-#5f55e6c0-e9e5-4a9c-b313-63c01fc31460
 api_token = api_conn.password
 
 #set user constants for api
@@ -64,14 +62,6 @@ def create_files_request(ti, api_endpoint , headers):
 
     logging.info(f'url = {url}')
 
-    #r = requests.post(url, headers=headers)
-    #response_dict = json.loads(r.content)
-    #ti.xcom_push(key='task_id', value=response_dict['task_id'])
-    #print(f"task_id is {response_dict['task_id']}")
-    #return response_dict['task_id']
-
-
-
 #2. проверяем готовность файлов в success
 #на выход получаем стринг идентификатор готового репорта который является ссылкой до файлов которые можем скачивать
 def check_report(ti, api_endpoint , headers):
@@ -93,7 +83,6 @@ def check_report(ti, api_endpoint , headers):
             break
     
     #тут соответствуенно если report_id не объявлен то есть не было сукксесса то в ошибку упадет и инженер идет разбираться почему
-    #можно сделать красивее но время
     ti.xcom_push(key='report_id', value=report_id)
     print(f"report_id is {report_id}")
     return report_id
@@ -101,7 +90,7 @@ def check_report(ti, api_endpoint , headers):
 
 
 
-#3. загружаем 3 файлика в таблички (таблички stage)
+#3. загружаем 3 файла в таблицы (stage)
 def upload_from_s3_to_pg(ti,nickname,cohort):
     report_ids = ti.xcom_pull(key='task_id', task_ids=['create_files_request'])
     report_id = report_ids[0]
@@ -166,18 +155,10 @@ def upload_from_s3_to_pg(ti,nickname,cohort):
     cur.close()
     conn.close()
 
-    #понятно что можно обернуть в функцию но для времени описал 3 разными запросами просто для экономии
     return 200
 
 
-#3. обновляем таблички d по загруженными в stage
-
-
-
-#4. апдейт витринок (таблички f)
-
-
-
+#3. обновление витрин 
 
 #Объявляем даг
 dag = DAG(

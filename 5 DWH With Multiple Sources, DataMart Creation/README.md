@@ -5,13 +5,17 @@
 
 ## **Используемые технологии и инструменты**
 AirFlow  
-ETL    
 SQL  
 PostgreSQL  
 MongoDB  
 MongoDB Compass  
 cloudbeaver    
 Jupyter Notebook  
+bash   
+PgConnect  
+MongoConnect  
+logging
+pendulum
 
 ## **Постановка задачи**
 

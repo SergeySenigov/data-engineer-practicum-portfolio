@@ -80,7 +80,6 @@ def check_report(ti, api_endpoint , headers):
             break
     
     #тут соответствуенно если report_id не объявлен то есть не было сукксесса то в ошибку упадет и инженер идет разбираться почему
-    #можно сделать красивее но время
     ti.xcom_push(key='report_id', value=report_id)
     print(f"report_id is {report_id}")
     return report_id
@@ -153,7 +152,6 @@ def upload_from_s3_to_pg(ti,nickname,cohort):
     cur.close()
     conn.close()
 
-    #понятно что можно обернуть в функцию но для времени описал 3 разными запросами просто для экономии
     return 200
 
 
