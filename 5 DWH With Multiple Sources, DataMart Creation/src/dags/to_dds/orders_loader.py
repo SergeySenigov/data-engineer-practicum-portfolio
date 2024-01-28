@@ -48,7 +48,7 @@ class OrdersOriginRepository:
                        ORDER BY id ASC --Обязательна сортировка по id, т.к. id используем в качестве курсора.
                        LIMIT %(limit)s --Обрабатываем только одну пачку объектов.
                     ) t 
-                    where exists (select id from dds.dm_timestamps dt where dt.ts = t.order_ts) /*!!*/ ;
+                    where exists (select id from dds.dm_timestamps dt where dt.ts = t.order_ts) 
                 """, {
                     "threshold": orders_threshold,
                     "limit": limit

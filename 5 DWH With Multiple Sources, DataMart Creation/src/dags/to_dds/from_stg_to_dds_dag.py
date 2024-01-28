@@ -24,7 +24,7 @@ from airflow.decorators import dag, task
 log = logging.getLogger(__name__)
 
 def reci_zdravo(log: logging.Logger) -> None:
-    log.info("Zdravo svim!")
+    log.info("Start")
 
 @dag(
     schedule_interval='15/30 * * * *',

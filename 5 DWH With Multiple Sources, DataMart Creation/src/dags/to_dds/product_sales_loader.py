@@ -66,7 +66,7 @@ with ss as (
                     ) t, ss
                     where ss.order_id =  t.order_id 
                     and ss.product_id = t.product_json::JSON->>'id' 
-                    and exists (select id from dds.dm_orders o where o.order_key = t.order_id) /*!!*/
+                    and exists (select id from dds.dm_orders o where o.order_key = t.order_id)
                     ; --Обрабатываем только одну пачку объектов.
                 """, {
                     "threshold": sales_threshold,

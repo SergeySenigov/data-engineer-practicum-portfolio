@@ -12,7 +12,7 @@ from sqlalchemy import create_engine  # Для подключения к БД
 log = logging.getLogger(__name__)
 
 def reci_zdravo_svim(log: logging.Logger) -> None:
-    log.info("Zdravo svim!")
+    log.info("Start")
 
 def users_load(log: logging.Logger) -> None:
     postgres_conn_id = 'PG_ORIGIN_BONUS_SYSTEM_CONNECTION'

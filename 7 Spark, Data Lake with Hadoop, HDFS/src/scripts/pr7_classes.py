@@ -1044,7 +1044,7 @@ class UsersCorresponded(object):
         if not isinstance(self.eventsWithUserAndCoords, EventsWithUserAndCoords):
             raise Exception(f'eventsWithUserAndCoords in {self.__class__.__name__} is of wrong type: {type(self.eventsWithUserAndCoords)}') 
 
-        # выбрать где событие типа message и заполнен message_to
+        # выбрать, где событие типа message и заполнен message_to
         # и оставить уникальные строки
         self.df = self.eventsWithUserAndCoords.df.where(" event_type = 'message' and message_to is not null ") 
 
@@ -1338,7 +1338,7 @@ class UserTravels(object):
 
         self.df = self.df.withColumn('long_stay_flag', F.when(F.col('city_stay_len') > 27, 1).otherwise(0))
 
-        # делаем окно,где первой строкой - город, где пребывание > 27 дней и наибольшей датой, если такой есть
+        # делаем окно, где первой строкой - город, где пребывание > 27 дней и наибольшей датой, если такой есть
         w = Window.partitionBy('user_id').orderBy(F.desc('long_stay_flag'), F.desc('city_stay_start'))
 
         self.df = self.df.withColumn("home_city", F.when(F.first('long_stay_flag').over(w) == 1, F.first('city').over(w))   )\

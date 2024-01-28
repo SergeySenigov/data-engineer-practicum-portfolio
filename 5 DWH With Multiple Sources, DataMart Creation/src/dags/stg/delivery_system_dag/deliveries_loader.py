@@ -145,7 +145,7 @@ class DeliveriesLader:
             i = 0
             for delivery in load_queue:
                 self.stg.insert_delivery(conn, delivery)
-                self.log.info(delivery) #!! 
+                self.log.info(delivery) 
 
                 i += 1
                 if i % self._LOG_THRESHOLD == 0:

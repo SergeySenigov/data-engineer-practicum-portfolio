@@ -54,7 +54,6 @@ conn.close()
 
 #1. запрашиваем выгрузку файликов
 #получаем в итоге стринг task_id идентификатор задачи выгрузки
-#где то через 60 секунд должен сформироваться по другому пути ссылка на доступ к выгруженным файлам
 def create_files_request(ti, api_endpoint , headers):
     method_url = '/generate_report'
     
@@ -71,8 +70,6 @@ def check_report(ti, api_endpoint , headers):
     method_url = '/get_report'
     payload = {'task_id': task_id}
 
-    #отчет выгружается 60 секунд минимум - самое простое в слип на 70 секунд уводим - делаем 4 итерации - если нет то пусть валится в ошибку
-    #значит с выгрузкой что-то не так по api и надо идти разбираться с генерацией данных - и в жизни такая же фигня бывает
     for i in range(4):
         time.sleep(70)
         r = requests.get('https://' + api_endpoint + method_url, params=payload, headers=headers)

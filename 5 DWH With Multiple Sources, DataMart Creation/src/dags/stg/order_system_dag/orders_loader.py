@@ -56,7 +56,7 @@ class OrdersLoader:
             i = 0
             for d in load_queue:
                 self.pg_saver.save_object(conn, str(d["_id"]), d["update_ts"], d)
-                self.log.info(d) #!!
+                self.log.info(d) 
 
                 i += 1
                 if i % self._LOG_THRESHOLD == 0:

@@ -111,7 +111,6 @@ class CouriersLader:
             i = 0
             for courier in load_queue:
                 self.stg.insert_courier(conn, courier)
-                #self.log.info(courier) #!! 
 
                 i += 1
                 if i % self._LOG_THRESHOLD == 0:
