@@ -14,8 +14,8 @@ Jupyter Notebook
 bash   
 PgConnect  
 MongoConnect  
-logging
-pendulum
+logging  
+pendulum  
 
 ## **Постановка задачи**
 

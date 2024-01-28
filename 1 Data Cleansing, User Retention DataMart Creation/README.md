@@ -6,7 +6,7 @@
 
 ## **Используемые технологии и инструменты**
 SQL  
-Window Functions
+Window Functions  
 PostgreSQL  
 cloudbeaver      
 

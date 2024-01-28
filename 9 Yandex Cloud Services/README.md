@@ -1,12 +1,12 @@
 ## **Цели проекта**  
 
-- Реализовать на платформе Yandex Cloud два сервиса, которые заполняют слои данных DDS и CDM
+- Реализовать на платформе Yandex Cloud сервисxы, которые заполняют слои данных STG, DDS и CDM
 
 - Визуализировать данные из витрины в дашборде в Datalense
 
 ## **Используемые технологии и инструменты**
-Yandex Cloud Services
-Datalense
+Yandex Cloud Services  
+Datalense  
 Kubernetes    
 kubectl  
 Kafka  
