@@ -11,6 +11,7 @@ Airflow
 Jupyter Notebook  
 SQL  
 PostgreSQL
+Spark Streaming
 
 ## **Постановка задачи**
 

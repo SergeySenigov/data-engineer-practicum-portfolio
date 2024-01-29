@@ -17,7 +17,7 @@ config:
   KAFKA_HOST: "XXX.mdb.yandexcloud.net"
   KAFKA_PORT: "9091"
   KAFKA_CONSUMER_USERNAME: "producer_consumer"
-  KAFKA_CONSUMER_PASSWORD: "bexvoh-dybsuv-7Juhci"
+  KAFKA_CONSUMER_PASSWORD: "XXXXXX"
   KAFKA_CONSUMER_GROUP: "test-consumer1"
   KAFKA_SOURCE_TOPIC: "dds-service-orders" 
 

@@ -12,18 +12,24 @@ from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.operators.python import PythonOperator
 from airflow.hooks.base import BaseHook
 from airflow.models.xcom import XCom
+from airflow.models import Variable
+
+import logging
 
 ###API settings###
 #set api connection from basehook
 api_conn = BaseHook.get_connection('create_files_api')
-#d5dg1j9kt695d30blp03.apigw.yandexcloud.net
 api_endpoint = api_conn.host
-#5f55e6c0-e9e5-4a9c-b313-63c01fc31460
 api_token = api_conn.password
 
 #set user constants for api
-nickname = "senigov"
+nickname = Variable.get('my_nickname')
 cohort = "XX"
+
+logging.basicConfig(level=logging.INFO)
+logging.info(f'This is an info message outside task, nickname = {nickname}')
+logging.info(f'This is an info message outside task, api_endpoint = {api_endpoint}')
+logging.info(f'This is an info message outside task, api_token = {api_token}')
 
 headers = {
     "X-API-KEY": api_conn.password,
@@ -50,13 +56,10 @@ conn.close()
 #получаем в итоге стринг task_id идентификатор задачи выгрузки
 def create_files_request(ti, api_endpoint , headers):
     method_url = '/generate_report'
-    r = requests.post('https://'+api_endpoint + method_url, headers=headers)
-    response_dict = json.loads(r.content)
-    ti.xcom_push(key='task_id', value=response_dict['task_id'])
-    print(f"task_id is {response_dict['task_id']}")
-    return response_dict['task_id']
+    
+    url = 'https://'+api_endpoint + method_url
 
-
+    logging.info(f'url = {url}')
 
 #2. проверяем готовность файлов в success
 #на выход получаем стринг идентификатор готового репорта который является ссылкой до файлов которые можем скачивать
@@ -84,7 +87,7 @@ def check_report(ti, api_endpoint , headers):
 
 
 
-#3. загружаем 3 файлика в таблички (таблички stage)
+#3. загружаем 3 файла в таблицы (stage)
 def upload_from_s3_to_pg(ti,nickname,cohort):
     report_ids = ti.xcom_pull(key='task_id', task_ids=['create_files_request'])
     report_id = report_ids[0]
@@ -152,23 +155,17 @@ def upload_from_s3_to_pg(ti,nickname,cohort):
     return 200
 
 
-#3. обновляем таблички d по загруженными в stage
-
-
-
-#4. апдейт витринок (таблички f)
-
-
-
+#3. обновление витрин 
 
 #Объявляем даг
 dag = DAG(
-    dag_id='4_export_data_api_s3_pg_update',
+    dag_id='4_export_data_api_s3_pg_update_mod1',
     schedule_interval='0 0 * * *',
     start_date=datetime.datetime(2021, 1, 1),
     catchup=False,
-    #dagrun_timeout=datetime.timedelta(minutes=60)
-)
+    dagrun_timeout=datetime.timedelta(minutes=60),
+    tags=['sprint4', 'senigov']
+    )
 
 
 
