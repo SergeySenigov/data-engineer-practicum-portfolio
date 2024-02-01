@@ -8,8 +8,7 @@ with user_group_log as (
     order by hg.registration_dt 
     limit 10
 )
-select hk_group_id
-            ,cnt_added_users
+select hk_group_id, cnt_added_users
 from user_group_log
 order by cnt_added_users
 limit 10 	;

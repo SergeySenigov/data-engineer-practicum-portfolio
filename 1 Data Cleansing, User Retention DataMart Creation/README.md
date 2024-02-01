@@ -6,6 +6,7 @@
 
 ## **Используемые технологии и инструменты**
 SQL  
+Common Table Expression 
 Window Functions  
 PostgreSQL  
 cloudbeaver      

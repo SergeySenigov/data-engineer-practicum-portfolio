@@ -8,7 +8,8 @@
 ## **Используемые технологии и инструменты**
 AirFlow      
 SQL  
-PostgreSQL   
+PostgreSQL
+pandas
 
 ## **Постановка задачи**
 
