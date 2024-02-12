@@ -6,17 +6,15 @@
 
 ## **Используемые технологии и инструменты**
 AirFlow  
-SQL  
-PostgreSQL  
-MongoDB  
+PostgreSQL    
 MongoDB Compass  
 cloudbeaver    
 Jupyter Notebook  
 bash   
 PgConnect  
 MongoConnect  
-logging  
 pendulum  
+SQLAlchemy  
 
 ## **Постановка задачи**
 
