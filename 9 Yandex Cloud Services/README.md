@@ -13,7 +13,8 @@ Kafka
 kcat  
 confluent_kafka  
 flask  
-docker   
+Docker Compose  
+Helm  
 Redis  
 
 ## **Постановка задачи**
