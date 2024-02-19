@@ -12,6 +12,7 @@ Hadoop
 HDFS  
 Airflow  
 Jupyter Notebook  
+SparkSubmitOperator  
 
 ## **Постановка задачи**
 

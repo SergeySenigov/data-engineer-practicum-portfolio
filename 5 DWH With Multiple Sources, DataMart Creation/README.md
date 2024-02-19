@@ -15,6 +15,7 @@ PgConnect
 MongoConnect  
 pendulum  
 SQLAlchemy  
+PostgresHook  
 
 ## **Постановка задачи**
 

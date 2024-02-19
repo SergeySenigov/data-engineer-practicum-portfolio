@@ -10,6 +10,8 @@ Vertica
 vertica_python  
 boto3  
 Airflow  
+TriggerDagRunOperator  
+PythonOperator  
 
 ## **Постановка задачи**
 

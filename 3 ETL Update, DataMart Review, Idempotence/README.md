@@ -14,7 +14,9 @@ cloudbeaver
 bash    
 psycopg2    
 pandas
-SQLAlchemy
+SQLAlchemy  
+PostgresOperator  
+BashOperator  
 
 ## **Постановка задачи**
 1. Команда разработки добавила в систему заказов магазина функционал отмены заказов и возврата средств (refunded). Требуется обновить процессы в пайплайне для учета нового функционала: использовать в витрине mart.f_sales статусы shipped и refunded. Все данные в витрине следует считать shipped.
