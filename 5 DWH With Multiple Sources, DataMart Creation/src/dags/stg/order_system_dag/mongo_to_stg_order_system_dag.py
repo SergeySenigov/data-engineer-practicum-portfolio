@@ -25,17 +25,17 @@ def reci_zdravo_svim(log: logging.Logger) -> None:
     log.info("Start")
 
 @dag(
-    schedule_interval='7/15 * * * *',  # Задаем расписание выполнения дага - каждый 15 минут.
+    schedule_interval='7/15 * * * *',  # Задаю расписание выполнения дага - каждый 15 минут.
     start_date=pendulum.datetime(2022, 5, 5, tz="UTC"),  # Дата начала выполнения дага. 
     catchup=False,  # Нужно ли запускать даг за предыдущие периоды (с start_date до сегодня) - False (не нужно).
     tags=['sprint5', 'stg', 'origin', 'mongo'],  # Теги, используются для фильтрации в интерфейсе Airflow.
     is_paused_upon_creation=True  # Остановлен/запущен при появлении. Сразу запущен.
 )
 def mongo_to_stg_order_system_dag():
-    # Создаем подключение к базе dwh.
+    # Создаю подключение к базе dwh.
     dwh_pg_connect = ConnectionBuilder.pg_conn("PG_WAREHOUSE_CONNECTION")
 
-    # Получаем переменные из Airflow.
+    # Получаю переменные из Airflow.
     cert_path = Variable.get("MONGO_DB_CERTIFICATE_PATH")
     db_user = Variable.get("MONGO_DB_USER")
     db_pw = Variable.get("MONGO_DB_PASSWORD")
@@ -49,57 +49,57 @@ def mongo_to_stg_order_system_dag():
 
     @task()
     def load_restaurants():
-        # Инициализируем класс, в котором реализована логика сохранения.
+        # Инициализирую класс, в котором реализована логика сохранения.
         pg_saver = PgRestaurantsSaver()
 
-        # Инициализируем подключение у MongoDB.
+        # Инициализирую подключение у MongoDB.
         mongo_connect = MongoConnect(cert_path, db_user, db_pw, host, rs, db, db)
 
-        # Инициализируем класс, реализующий чтение данных из источника.
+        # Инициализирую класс, реализующий чтение данных из источника.
         collection_reader = RestaurantsReader(mongo_connect)
 
-        # Инициализируем класс, в котором реализована бизнес-логика загрузки данных.
+        # Инициализирую класс, в котором реализована бизнес-логика загрузки данных.
         loader = RestaurantsLoader(collection_reader, dwh_pg_connect, pg_saver, log)
 
-        # Запускаем копирование данных.
+        # Запускаю копирование данных.
         loader_len = loader.run_copy()
 
         log.info(f'length of loader = {loader_len}')
 
     @task()
     def load_users():
-        # Инициализируем класс, в котором реализована логика сохранения.
+        # Инициализирую класс, в котором реализована логика сохранения.
         pg_saver = PgUsersSaver()
 
-        # Инициализируем подключение у MongoDB.
+        # Инициализирую подключение у MongoDB.
         mongo_connect = MongoConnect(cert_path, db_user, db_pw, host, rs, db, db)
 
-        # Инициализируем класс, реализующий чтение данных из источника.
+        # Инициализирую класс, реализующий чтение данных из источника.
         collection_reader = UsersReader(mongo_connect)
 
-        # Инициализируем класс, в котором реализована бизнес-логика загрузки данных.
+        # Инициализирую класс, в котором реализована бизнес-логика загрузки данных.
         loader = UsersLoader(collection_reader, dwh_pg_connect, pg_saver, log)
 
-        # Запускаем копирование данных.
+        # Запускаю копирование данных.
         loader_len = loader.run_copy()
 
         log.info(f'length of loader = {loader_len}')
 
     @task()
     def load_orders():
-        # Инициализируем класс, в котором реализована логика сохранения.
+        # Инициализирую класс, в котором реализована логика сохранения.
         pg_saver = PgOrdersSaver()
 
-        # Инициализируем подключение у MongoDB.
+        # Инициализирую подключение у MongoDB.
         mongo_connect = MongoConnect(cert_path, db_user, db_pw, host, rs, db, db)
 
-        # Инициализируем класс, реализующий чтение данных из источника.
+        # Инициализирую класс, реализующий чтение данных из источника.
         collection_reader = OrdersReader(mongo_connect)
 
-        # Инициализируем класс, в котором реализована бизнес-логика загрузки данных.
+        # Инициализирую класс, в котором реализована бизнес-логика загрузки данных.
         loader = OrdersLoader(collection_reader, dwh_pg_connect, pg_saver, log)
 
-        # Запускаем копирование данных.
+        # Запускаю копирование данных.
         loader_len = loader.run_copy()
 
         log.info(f'length of loader = {loader_len}')
@@ -109,9 +109,8 @@ def mongo_to_stg_order_system_dag():
     zdravo = zdravo_task()
     orders_loader= load_orders()
 
-    # Задаем порядок выполнения. Таск только один, поэтому зависимостей нет.
+    # Задаю порядок выполнения. Таск только один, поэтому зависимостей нет.
     zdravo >> [users_loader, restaurant_loader, orders_loader]  # type: ignore
     
 
-
-order_stg_dag = mongo_to_stg_order_system_dag()  # noqa
+order_stg_dag = mongo_to_stg_order_system_dag()  

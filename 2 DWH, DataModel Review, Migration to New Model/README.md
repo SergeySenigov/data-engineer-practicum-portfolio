@@ -438,7 +438,7 @@ order by ds
 
 Итого 54174 - равно количеству shippingid
 
-Создал представление shipping_datamart на основании готовых таблиц для аналитики и включим в него:
+Создал представление shipping_datamart на основании готовых таблиц для аналитики и включил в него:
 shippingid 
 vendorid
 transfer_type — тип доставки из таблицы shipping_transfer

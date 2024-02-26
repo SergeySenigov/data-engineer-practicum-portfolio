@@ -14,7 +14,7 @@ def reci_zdravo_svim(log: logging.Logger) -> None:
     log.info("Start")
 
 @dag(
-    schedule_interval='0/30 * * * *',  # Задаем расписание выполнения дага - каждый 15 минут.
+    schedule_interval='0/30 * * * *',  # Задаю расписание выполнения дага - каждый 15 минут.
     start_date=pendulum.datetime(2023, 2, 9, 6, tz="Asia/Yekaterinburg"),  # Дата начала выполнения дага. 
     catchup=False,  # Нужно ли запускать даг за предыдущие периоды (с start_date до сегодня) - False (не нужно).
     tags=['project6', 's3', 'Vertica'],  # Теги, используются для фильтрации в интерфейсе Airflow.

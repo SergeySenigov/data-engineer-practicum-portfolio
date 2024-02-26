@@ -36,7 +36,7 @@ def reci_zdravo(log: logging.Logger) -> None:
 
 def from_stg_to_dds_dag():
 
-    # Создаем подключение к базе dwh.
+    # Создаю подключение к базе dwh.
     dwh_pg_connect = ConnectionBuilder.pg_conn("PG_WAREHOUSE_CONNECTION")
 
     @task(task_id="zdravo_task")
@@ -51,55 +51,55 @@ def from_stg_to_dds_dag():
     def null_task2():
         pass
 
-    # # Объявляем таск, который загружает данные.
+    # # Объявляю таск, который загружает данные.
     @task(task_id="users_load_task")
     def load_users_task():
 
-      # создаем экземпляр класса, в котором реализована логика.
+      # создаю экземпляр класса, в котором реализована логика.
         rest_loader = UsersLoader(dwh_pg_connect, dwh_pg_connect, log)
-        rest_loader.load_users()  # Вызываем функцию, которая перельет данные.
+        rest_loader.load_users()  # Вызываю функцию, которая перельет данные.
 
     @task(task_id="restaurants_load_task")
     def load_restaurants_task():
         rest_loader = RestaurantsLoader(dwh_pg_connect, dwh_pg_connect, log)
-        rest_loader.load_data()  # Вызываем функцию, которая перельет данные.
+        rest_loader.load_data()  # Вызываю функцию, которая перельет данные.
 
     @task(task_id="timestamps_load_task")
     def load_timestamps_task():
         rest_loader = TimestampsLoader(dwh_pg_connect, dwh_pg_connect, log)
-        rest_loader.load_data()  # Вызываем функцию, которая перельет данные.
+        rest_loader.load_data()  # Вызываю функцию, которая перельет данные.
 
     @task(task_id="products_load_task")
     def load_products_task():
         rest_loader = ProductsLoader(dwh_pg_connect, dwh_pg_connect, log)
-        rest_loader.load_data()  # Вызываем функцию, которая перельет данные.
+        rest_loader.load_data()  # Вызываю функцию, которая перельет данные.
 
     @task(task_id="orders_load_task")
     def load_orders_task():
         rest_loader = OrdersLoader(dwh_pg_connect, dwh_pg_connect, log)
-        rest_loader.load_data()  # Вызываем функцию, которая перельет данные.
+        rest_loader.load_data()  # Вызываю функцию, которая перельет данные.
 
     @task(task_id="sales_load_task")
     def load_sales_task():
         rest_loader = ProductSalesLoader(dwh_pg_connect, dwh_pg_connect, log)
-        rest_loader.load_data()  # Вызываем функцию, которая перельет данные.
+        rest_loader.load_data()  # Вызываю функцию, которая перельет данные.
 
     @task(task_id="couriers_load_task")
     def load_couriers_task():
         rest_loader = CouriersLoader(dwh_pg_connect, dwh_pg_connect, log)
-        rest_loader.load_data()  # Вызываем функцию, которая перельет данные.
+        rest_loader.load_data()  # Вызываю функцию, которая перельет данные.
 
     @task(task_id="deliveries_load_task")
     def load_deliveries_task():
         rest_loader = DeliveriesLoader(dwh_pg_connect, dwh_pg_connect, log)
-        rest_loader.load_data()  # Вызываем функцию, которая перельет данные.
+        rest_loader.load_data()  # Вызываю функцию, которая перельет данные.
 
     @task(task_id="couriers_deliveries_load_task")
     def load_courier_deliveries_task():
         rest_loader = CourierDeliveriesLoader(dwh_pg_connect, dwh_pg_connect, log)
-        rest_loader.load_data()  # Вызываем функцию, которая перельет данные.
+        rest_loader.load_data()  # Вызываю функцию, которая перельет данные.
 
-    # Инициализируем объявленные таски.
+    # Инициализирую объявленные таски.
     res_zdravo = reci_zdravo_task()
     res_null1 = null_task1()
     res_null2= null_task2()

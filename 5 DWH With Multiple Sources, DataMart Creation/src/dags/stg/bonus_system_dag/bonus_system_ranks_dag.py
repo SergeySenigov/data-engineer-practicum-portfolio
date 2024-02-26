@@ -27,12 +27,12 @@ def psql_to_stg_bonus_system_ranks_dag():
     def load_ranks():
         # создаю экземпляр класса, в котором реализована логика.
         rest_loader = RankLoader(origin_pg_connect, dwh_pg_connect, log)
-        rest_loader.load_ranks()  # Вызываем функцию, которая перельет данные.
+        rest_loader.load_ranks()  # Вызываю функцию, которая перельет данные.
 
     # Инициализирую объявленные таски.
     ranks_dict = load_ranks()
 
-    # Далее задаем последовательность выполнения тасков.
+    # Далее задаю последовательность выполнения тасков.
     # Т.к. таск один, просто обозначю его здесь.
     ranks_dict  
 

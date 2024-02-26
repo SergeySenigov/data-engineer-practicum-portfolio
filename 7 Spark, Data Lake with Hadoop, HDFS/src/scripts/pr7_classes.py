@@ -182,7 +182,7 @@ class CitiesRaw(object):
         if self.citiesSource is None: 
             self.citiesSource = self.session.read.csv('/user/sergeyseni/data/geo/cities/actual/geo.csv', sep = ";", header = True)
 
-        self.df = self.citiesSource # не выполняем преобразований
+        self.df = self.citiesSource # не выполняю преобразований
         self.df = self.df.cache() ##!! cache
         self.df.rdd.setName(self.path)
         self.count = self.df.count()
@@ -330,7 +330,7 @@ class EventsRaw(object):
         if not isinstance(self.eventsSource, EventsSource):
             raise Exception(f'eventsSource in {self.__class__.__name__} has invalid type, type is {type(self.eventsSource)}') 
 
-        self.df = self.eventsSource.df # не выполняем преобразований
+        self.df = self.eventsSource.df # не выполняю преобразований
         self.df = self.df.cache() ##!! cache
         self.df.rdd.setName(self.path)
         
@@ -544,8 +544,6 @@ class EventsWithCitiesAll(object):
             
         if self.eventsWithCitiesPartial.df is None:
             self.eventsWithCitiesPartial.read()
-            #raise Exception(f'eventsWithCitiesPartial.df in {self.__class__.__name__} is None') 
-
     
         w = Window().partitionBy('user_id').orderBy(F.when(F.col('event_type') == 'message', 1).otherwise(0).desc(), F.desc('date'))
 
@@ -800,7 +798,7 @@ class Users(object):
         # добавляю колонки "actual_city" по последнему _сообщению_ пользователя
         # это первая строка из окна событий по user_id с сортировкой по типу события "message" и дате по убыванию
         # если в первой строке событие не "message", значит у пользователя вообще нет сообщений
-        # тогда не заполняем, там может быть другой тип события
+        # тогда не заполняю, там может быть другой тип события
         w1 = Window().partitionBy('user_id').orderBy(F.when(F.col('event_type') == 'message', 1).otherwise(0).desc(), F.desc('date'))
 
         self.df = self.df\
@@ -823,7 +821,7 @@ class Users(object):
          .withColumn('last_event_city',    F.first('city').over(w2) )\
          .withColumn('last_event_datetime', F.first('event_datetime').over(w2) )
         
-        # оставим только нужные колонки для Users и оставим только уникальные строки 
+        # оставил только нужные колонки для Users и оставил только уникальные строки 
         self.df = self.df.select('user_id', 'actual_city_id', 'actual_city', \
                                  'last_event_city_id', 'last_event_city', 'last_message_id', \
                                  'actual_lat', 'actual_lon', 'last_event_datetime').distinct()
@@ -1148,7 +1146,7 @@ class UsersNear(object):
         #  |-- actual_lat: double (nullable = true)
         #  |-- actual_lon: double (nullable = true)
         
-        # уберем тех, где нельзя посчитать расстояние
+        # уберу тех, где нельзя посчитать расстояние
         self.usersLeft.df = self.usersLeft.df.filter(F.col('actual_lat').isNotNull())
         self.usersRight.df = self.usersRight.df.filter(F.col('actual_lat').isNotNull())
         
@@ -1169,10 +1167,10 @@ class UsersNear(object):
         self.usersLeft.df = self.usersLeft.df.repartition(100)
         self.usersRight.df = self.usersRight.df.repartition(100)
         
-        # вычислим расстояние между всеми парами пользователей
+        # вычисляю расстояние между всеми парами пользователей
         self.df = self.usersLeft.df.crossJoin(self.usersRight.df)
         
-        # оставим только уникальные пары
+        # оставил только уникальные пары
         self.df = self.df.where("user_left < user_right")
         
         self.df = self.df.withColumn('dist', F.acos(F.sin(F.col('left_lat'))*F.sin(F.col('actual_lat')) + F.cos(F.col('left_lat'))*F.cos(F.col('actual_lat'))*F.cos(F.col('left_lon')-F.col('actual_lon')))*F.lit(6371))
@@ -1230,7 +1228,6 @@ class UserTravelCities(object):
             raise Exception(f'eventsWithCitiesAll in {self.__class__.__name__} is None') 
             
         if self.eventsWithCitiesAll.df is None:
-            #self.eventsWithCitiesAll.read()
             raise Exception(f'eventsWithCitiesAll.df in {self.__class__.__name__} is None') 
     
         # root
@@ -1250,13 +1247,13 @@ class UserTravelCities(object):
         self.df = self.eventsWithCitiesAll.df
 
         self.df = self.df.where("city is not null")
-        # ставим признаки начала и конца пребывания с помощью lead и lag сравнивая с предыдущим и следующим городом
+        # ставлю признаки начала и конца пребывания с помощью lead и lag сравнивая с предыдущим и следующим городом
         w = Window().partitionBy('user_id').orderBy(F.col('date').asc())
 
         self.df = self.df.withColumn('start_flag', F.when( (F.col('city') != F.lag('city').over(w) ) | F.isnull(F.lag('city').over(w)), 1))
         self.df = self.df.withColumn('end_flag', F.when( (F.col('city') != F.lead('city').over(w) ) | F.isnull(F.lead('city').over(w)), 1))
 
-        # в каждой строке делаем подсчет start_flag, таким образом получаем группы строк с одинаковым city_stay_id для каждого пребывания
+        # в каждой строке делаю подсчет start_flag, таким образом получаю группы строк с одинаковым city_stay_id для каждого пребывания
         self.df = self.df.withColumn('stay_id', F.count('start_flag').over(w))
         # когда заполняется поле start_flag, то не указан otherwise, 
         # соответственно там будет "1" - для строки начала каждого пребывания и null для всех остальных строк пребывания
@@ -1265,11 +1262,11 @@ class UserTravelCities(object):
 
         w2 = Window().partitionBy('user_id', 'stay_id')
         
-        # в образованной группе присваиваем всем одинаковые значения начала и конца пребывания
+        # в образованной группе присваиваю всем одинаковые значения начала и конца пребывания
         self.df = self.df.withColumn('city_stay_start', F.min('date').over(w2))
         self.df = self.df.withColumn('city_stay_end', F.max('date').over(w2))
 
-        # считаем длительность пребывания
+        # считаю длительность пребывания
         self.df = self.df.withColumn("city_stay_len", F.datediff('city_stay_end', 'city_stay_start')+1)
 
         self.df = self.df.select('user_id', 'city_id', 'city', 'city_stay_start', 'city_stay_end', 'city_stay_len').distinct()
@@ -1338,7 +1335,7 @@ class UserTravels(object):
 
         self.df = self.df.withColumn('long_stay_flag', F.when(F.col('city_stay_len') > 27, 1).otherwise(0))
 
-        # делаем окно, где первой строкой - город, где пребывание > 27 дней и наибольшей датой, если такой есть
+        # делаю окно, где первой строкой - город, где пребывание > 27 дней и наибольшей датой, если такой есть
         w = Window.partitionBy('user_id').orderBy(F.desc('long_stay_flag'), F.desc('city_stay_start'))
 
         self.df = self.df.withColumn("home_city", F.when(F.first('long_stay_flag').over(w) == 1, F.first('city').over(w))   )\
@@ -1481,7 +1478,6 @@ class Report3(object):
             raise Exception(f'eventsWithRegsWithCities in {self.__class__.__name__} is None') 
             
         if self.eventsWithRegsWithCities.df is None:
-            #self.eventsWithCitiesAll.read()
             raise Exception(f'eventsWithRegsWithCities.df in {self.__class__.__name__} is None') 
             
         self.df = self.eventsWithRegsWithCities.df\
@@ -1599,9 +1595,6 @@ class Report4(object):
         self.userCommonChannels.df = self.userCommonChannels.df.withColumnRenamed('user_left', 'ucc_user_left')
         self.userCommonChannels.df = self.userCommonChannels.df.withColumnRenamed('user_right', 'ucc_user_right')
 
-        # self.usersCorresponded.df = self.usersCorresponded.df.withColumnRenamed('user_left', 'uc_user_left')
-        # self.usersCorresponded.df = self.usersCorresponded.df.withColumnRenamed('user_right', 'uc_user_right')
-
         self.df = self.usersNear.df.selectExpr('user_left', 'user_right', 'city_left', 'city_id_left as zone_id')
 
         # связь с userCommonChannels
@@ -1623,8 +1616,6 @@ class Report4(object):
                     , F.from_utc_timestamp(F.col('processed_dttm'), F.concat(F.lit('Australia/'), F.col('city_left'))))\
                      .otherwise(None))
 
-        #self.df = self.df.where("uc_user_left is null")
-        #self.df = self.df.drop('uc_user_left', 'uc_user_right', 'city_left')
         self.df = self.df.drop('city_left', 'subscription_channel', 'ucc_user_left', 'ucc_user_right')
 
         self.df = self.df.cache() ##!! cache

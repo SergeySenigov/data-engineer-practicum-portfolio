@@ -23,12 +23,12 @@ class OrdersLoader:
         self.log = logger
 
     def run_copy(self) -> int:
-        # открываем транзакцию.
+        # Открываю транзакцию.
         # Транзакция будет закоммичена, если код в блоке with пройдет успешно (т.е. без ошибок).
         # Если возникнет ошибка, произойдет откат изменений (rollback транзакции).
         with self.pg_dest.connection() as conn:
 
-            # Прочитываем состояние загрузки
+            # Прочитываю состояние загрузки
             # Если настройки еще нет, создаю ее.
             wf_setting = self.settings_repository.get_setting(conn, self.WF_KEY)
             if not wf_setting:

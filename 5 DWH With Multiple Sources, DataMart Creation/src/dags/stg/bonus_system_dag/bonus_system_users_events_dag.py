@@ -40,10 +40,10 @@ def users_load(log: logging.Logger) -> None:
 
 def psql_to_stg_bonus_system_users_events_dag():
 
-    # Создаем подключение к базе dwh.
+    # Создал подключение к базе dwh.
     dwh_pg_connect = ConnectionBuilder.pg_conn("PG_WAREHOUSE_CONNECTION")
 
-    # Создаем подключение к базе подсистемы бонусов.
+    # Создал подключение к базе подсистемы бонусов.
     origin_pg_connect = ConnectionBuilder.pg_conn("PG_ORIGIN_BONUS_SYSTEM_CONNECTION")
 
     @task()
@@ -54,15 +54,14 @@ def psql_to_stg_bonus_system_users_events_dag():
     def load_users():
         users_load(log)
 
-    # Объявляем таск, который загружает данные.
+    # Объявил таск, который загружает данные.
     @task(task_id="events_load_id")
     def load_events():
-        # создаем экземпляр класса, в котором реализована логика.
+        # создал экземпляр класса, в котором реализована логика.
         rest_loader = EventsLoader(origin_pg_connect, dwh_pg_connect, log)
-        rest_loader.load_events()  # Вызываем функцию, которая перельет данные.
+        rest_loader.load_events()  # Вызываю функцию, которая перельет данные.
 
-
-    # Инициализируем объявленные таски.
+    # Инициализировал объявленные таски.
     hello = hello_task()
     users = load_users()
     res_events = load_events()

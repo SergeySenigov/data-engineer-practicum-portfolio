@@ -38,7 +38,6 @@ headers = {
 }
 
 
-###POSTGRESQL settings###
 #set postgresql connectionfrom basehook
 psql_conn = BaseHook.get_connection('postgresql_de')
 
@@ -50,10 +49,8 @@ conn.close()
 
 
 
-
-
-#1. запрашиваем выгрузку файликов
-#получаем в итоге стринг task_id идентификатор задачи выгрузки
+#1. запрашиваю выгрузку файликов
+#получаю в итоге стринг task_id идентификатор задачи выгрузки
 def create_files_request(ti, api_endpoint , headers):
     method_url = '/generate_report'
     
@@ -61,8 +58,8 @@ def create_files_request(ti, api_endpoint , headers):
 
     logging.info(f'url = {url}')
 
-#2. проверяем готовность файлов в success
-#на выход получаем стринг идентификатор готового репорта который является ссылкой до файлов которые можем скачивать
+#2. проверяю готовность файлов в success
+#на выход получаю стринг идентификатор готового репорта который является ссылкой до файлов которые можем скачивать
 def check_report(ti, api_endpoint , headers):
     task_ids = ti.xcom_pull(key='task_id', task_ids=['create_files_request'])
     task_id = task_ids[0]
@@ -86,7 +83,7 @@ def check_report(ti, api_endpoint , headers):
 
 
 
-#3. загружаем 3 файла в таблицы (stage)
+#3. загружаю 3 файла в таблицы (stage)
 def upload_from_s3_to_pg(ti,nickname,cohort):
     report_ids = ti.xcom_pull(key='task_id', task_ids=['create_files_request'])
     report_id = report_ids[0]
@@ -156,7 +153,7 @@ def upload_from_s3_to_pg(ti,nickname,cohort):
 
 #3. обновление витрин 
 
-#Объявляем даг
+#Объявляю даг
 dag = DAG(
     dag_id='4_export_data_api_s3_pg_update_mod1',
     schedule_interval='0 0 * * *',

@@ -1,10 +1,4 @@
-# from datetime import datetime, timedelta, date
-# from airflow import DAG
-# from airflow.operators.python_operator import PythonOperator, BranchPythonOperator
-# from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
-# from airflow.hooks.http_hook import HttpHook
-# from airflow.operators.bash_operator import BashOperator
 from examples.to_cmd.settlement_loader import SettlementLoader
 from examples.to_cmd.courier_ledger_loader import CourierLedgerLoader
 from lib import ConnectionBuilder
@@ -29,25 +23,25 @@ def reci_zdravo(log: logging.Logger) -> None:
 
 def from_dds_to_cdm_dag():
 
-    # Создаем подключение к базе dwh.
+    # Создаю подключение к базе dwh.
     dwh_pg_connect = ConnectionBuilder.pg_conn("PG_WAREHOUSE_CONNECTION")
 
     @task(task_id="zdravo_task")
     def reci_zdravo_task():
         reci_zdravo(log)
 
-    # # Объявляем таск, который загружает данные.
+    # # Объявляю таск, который загружает данные.
     @task(task_id="settlement_load_task")
     def load_settlement_task():
         rest_loader = SettlementLoader(dwh_pg_connect, dwh_pg_connect, log)
-        rest_loader.load_data()  # Вызываем функцию, которая перельет данные.
+        rest_loader.load_data()  # Вызываю функцию, которая перельет данные.
 
     @task(task_id="courier_ledger_load_task")
     def load_courier_ledger_task():
         rest_loader = CourierLedgerLoader(dwh_pg_connect, dwh_pg_connect, log)
-        rest_loader.load_data()  # Вызываем функцию, которая перельет данные.
+        rest_loader.load_data()  # Вызываю функцию, которая перельет данные.
 
-    # Инициализируем объявленные таски.
+    # Инициализирую объявленные таски.
     res_settlment = load_settlement_task()
     res_courier_ledger = load_courier_ledger_task()
 

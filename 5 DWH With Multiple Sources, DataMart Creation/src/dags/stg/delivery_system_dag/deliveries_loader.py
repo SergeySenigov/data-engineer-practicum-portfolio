@@ -65,7 +65,6 @@ class DeliveriesOriginRepository():
                 objs.append(obj)
 
             offset += self.LOAD_BATCH_SIZE
-            #break 
 
         return objs
 
@@ -119,18 +118,18 @@ class DeliveriesLader:
         self.log = log
 
     def laden_deliveries(self):
-        # открываем транзакцию.
+        # Открываю транзакцию.
         # Транзакция будет закоммичена, если код в блоке with пройдет успешно (т.е. без ошибок).
         # Если возникнет ошибка, произойдет откат изменений (rollback транзакции).
         with self.pg_dest.connection() as conn:
 
-            # Прочитываем состояние загрузки
+            # Прочитываю состояние загрузки
             # Если настройки еще нет, создаю ее.
             wf_setting = self.settings_repository.get_setting(conn, self.WF_KEY)
             if not wf_setting:
                 wf_setting = EtlSetting(id=0, workflow_key=self.WF_KEY, workflow_settings={self.NUM_LOADED_KEY: 0, self.LAST_LOADED_TS_KEY: '2023-01-20'})
 
-            # Вычитываем очередную пачку объектов.
+            # Вычитываю очередную пачку объектов.
             last_loaded_ts_str = wf_setting.workflow_settings[self.LAST_LOADED_TS_KEY]
             last_loaded_ts = dt.datetime.fromisoformat(last_loaded_ts_str)
             self.log.info(f"Starting to load from last checkpoint: {last_loaded_ts}")
@@ -141,7 +140,7 @@ class DeliveriesLader:
                 self.log.info("Quitting.")
                 return
 
-            # Сохраняем объекты в базу dwh.
+            # Сохраняю объекты в базу dwh.
             i = 0
             for delivery in load_queue:
                 self.stg.insert_delivery(conn, delivery)
@@ -151,15 +150,15 @@ class DeliveriesLader:
                 if i % self._LOG_THRESHOLD == 0:
                     self.log.info(f"processed {i} documents of {len(load_queue)} while syncing deliveries.")
 
-            # Сохраняем прогресс.
-            # Мы пользуемся тем же connection, поэтому настройка сохранится вместе с объектами,
+            # Сохраняю прогресс.
+            # Пользуюсь тем же connection, поэтому настройка сохранится вместе с объектами,
             # либо откатятся все изменения целиком.
             wf_setting.workflow_settings[self.NUM_LOADED_KEY] = len(load_queue)
             ts = max([t.order_ts for t in load_queue])
             datetimeObj = dt.datetime.strptime(ts, '%Y-%m-%d %H:%M:%S.%f')
 
             wf_setting.workflow_settings[self.LAST_LOADED_TS_KEY] = dt.datetime.strftime(datetimeObj, '%Y-%m-%d %H:%M:%S')
-            wf_setting_json = json2str(wf_setting.workflow_settings)  # Преобразуем к строке, чтобы положить в БД.
+            wf_setting_json = json2str(wf_setting.workflow_settings)  # Преобразую к строке, чтобы положить в БД.
             self.settings_repository.save_setting(conn, wf_setting.workflow_key, wf_setting_json)
             self.log.info(f'wf_setting_json = {wf_setting_json}')
 

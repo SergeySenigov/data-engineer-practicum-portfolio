@@ -129,12 +129,12 @@ class CourierLedgerLoader:
         self.log = log
 
     def load_data(self):
-        # открываем транзакцию.
+        # Открываю транзакцию.
         # Транзакция будет закоммичена, если код в блоке with пройдет успешно (т.е. без ошибок).
         # Если возникнет ошибка, произойдет откат изменений (rollback транзакции).
         with self.pg_dest.connection() as conn:
 
-            # Прочитываем состояние загрузки
+            # Прочитываю состояние загрузки
             # Если настройки еще нет, создаю ее.
             wf_setting = self.settings_repository.get_setting(conn, self.WF_KEY)
             if not wf_setting:
@@ -143,7 +143,7 @@ class CourierLedgerLoader:
                      workflow_settings={self.WF_MAX_LOADED_TS_KEY: -1, self.WF_LOADED_LEDGER_LINES_KEY: 0})
             self.log.info(f'wf_setting = {wf_setting}')
 
-            # Вычитываем очередную пачку объектов.
+            # Вычитываю очередную пачку объектов.
             last_loaded = wf_setting.workflow_settings[self.WF_MAX_LOADED_TS_KEY]
             load_queue = self.dds.list_objects(last_loaded, self.BATCH_LIMIT)
             self.log.info(f"Found {len(load_queue)} courier ledger lines to load.")
@@ -151,7 +151,7 @@ class CourierLedgerLoader:
                 self.log.info("Quitting.")
                 return
 
-            # Сохраняем объекты в базу dwh.
+            # Сохраняю объекты в базу dwh.
             for object in load_queue:
                 #print(object)
                 try:
@@ -161,12 +161,12 @@ class CourierLedgerLoader:
                     print('insert_object Error =', err)   
                     raise  
 
-            # Сохраняем прогресс.
-            # Мы пользуемся тем же connection, поэтому настройка сохранится вместе с объектами,
+            # Сохраняю прогресс.
+            # Пользуюсь тем же connection, поэтому настройка сохранится вместе с объектами,
             # либо откатятся все изменения целиком.
             wf_setting.workflow_settings[self.WF_MAX_LOADED_TS_KEY] = max([t.max_ts for t in load_queue])
             wf_setting.workflow_settings[self.WF_LOADED_LEDGER_LINES_KEY] = len(load_queue)
-            wf_setting_json = json2str(wf_setting.workflow_settings)  # Преобразуем к строке, чтобы положить в БД.
+            wf_setting_json = json2str(wf_setting.workflow_settings)  # Преобразую к строке, чтобы положить в БД.
             self.log.info(f'wf_setting = {wf_setting}')
             self.settings_repository.save_setting(conn, wf_setting.workflow_key, wf_setting_json)
             

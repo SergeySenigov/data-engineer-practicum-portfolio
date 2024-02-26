@@ -24,7 +24,7 @@ def load_info(log: logging.Logger) -> None:
 
 def http_to_stg_delivery_system_dag():
 
-    # Создаем подключение к базе dwh.
+    # Создаю подключение к базе dwh.
     dwh_pg_connect = ConnectionBuilder.pg_conn("PG_WAREHOUSE_CONNECTION")
 
     @task()
@@ -35,15 +35,15 @@ def http_to_stg_delivery_system_dag():
     def laden_couriers_aufgabe(task_id="laden_couriers_id"):
         url = 'https://XXX.apigw.yandexcloud.net/couriers'
         couriers_lader = CouriersLader(url, dwh_pg_connect, log)
-        couriers_lader.laden_couriers()  # Вызываем функцию, которая перельет данные.
+        couriers_lader.laden_couriers()  # Вызываю функцию, которая перельет данные.
 
     @task()
     def laden_deliveries_aufgabe(task_id="load_deliveries_id"):
         url = 'https://XXX.apigw.yandexcloud.net/deliveries'
         couriers_lader = DeliveriesLader(url, dwh_pg_connect, log)
-        couriers_lader.laden_deliveries()  # Вызываем функцию, которая перельет данные.
+        couriers_lader.laden_deliveries()  # Вызываю функцию, которая перельет данные.
 
-    # Инициализируем объявленные таски.
+    # Инициализирую объявленные таски.
     res_sagen_hallo = hallo_aufgabe()
     res_load_couriers_aufgabe = laden_couriers_aufgabe()
     res_load_deliveries_aufgabe = laden_deliveries_aufgabe()

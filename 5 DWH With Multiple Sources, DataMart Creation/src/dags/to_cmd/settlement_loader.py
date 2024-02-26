@@ -37,7 +37,6 @@ class SettlementOriginRepository:
                 from (
                   select dt.id, fps.order_id , fps.total_sum , fps.bonus_payment , fps.bonus_grant, dr.restaurant_id , dr.restaurant_name ,
                    dt."year" , dt."month", dt."date", do2.order_key , dt.ts,
-                   --date_trunc('month', dt."date") + interval '1 month' - interval '1 day' settlement_date
                    dt."date" settlement_date
                   from dds.fct_product_sales fps 
                   left join dds.dm_orders do2 on do2.id = fps.order_id and do2.order_status = 'CLOSED'
@@ -102,12 +101,12 @@ class SettlementLoader:
         self.log = log
 
     def load_data(self):
-        # открываем транзакцию.
+        # Открываю транзакцию.
         # Транзакция будет закоммичена, если код в блоке with пройдет успешно (т.е. без ошибок).
         # Если возникнет ошибка, произойдет откат изменений (rollback транзакции).
         with self.pg_dest.connection() as conn:
 
-            # Прочитываем состояние загрузки
+            # Прочитываю состояние загрузки
             # Если настройки еще нет, создаю ее.
             wf_setting = self.settings_repository.get_setting(conn, self.WF_KEY)
             if not wf_setting:
@@ -116,7 +115,7 @@ class SettlementLoader:
                    workflow_settings={self.WF_MAX_LOADED_TS_KEY: -1, self.WF_LOADED_ORDERS_KEY:0})
             self.log.info(f'wf_setting = {wf_setting}')
 
-            # Вычитываем очередную пачку объектов.
+            # Вычитываю очередную пачку объектов.
             last_loaded = wf_setting.workflow_settings[self.WF_MAX_LOADED_TS_KEY]
             load_queue = self.dds.list_objects(last_loaded, self.BATCH_LIMIT)
             self.log.info(f"Found {len(load_queue)} settlements to load.")
@@ -124,7 +123,7 @@ class SettlementLoader:
                 self.log.info("Quitting.")
                 return
 
-            # Сохраняем объекты в базу dwh.
+            # Сохраняю объекты в базу dwh.
             for object in load_queue:
                 try:
                     self.cdm.insert_object(conn, object)
@@ -133,12 +132,12 @@ class SettlementLoader:
                     print('insert_object Error =', err)   
                     raise  
 
-            # Сохраняем прогресс.
-            # Мы пользуемся тем же connection, поэтому настройка сохранится вместе с объектами,
+            # Сохраняю прогресс.
+            # Пользуюсь тем же connection, поэтому настройка сохранится вместе с объектами,
             # либо откатятся все изменения целиком.
             wf_setting.workflow_settings[self.WF_MAX_LOADED_TS_KEY] = max([t.max_ts for t in load_queue])
             wf_setting.workflow_settings[self.WF_LOADED_ORDERS_KEY] = sum([t.orders_count for t in load_queue])
-            wf_setting_json = json2str(wf_setting.workflow_settings)  # Преобразуем к строке, чтобы положить в БД.
+            wf_setting_json = json2str(wf_setting.workflow_settings)  # Преобразую к строке, чтобы положить в БД.
             self.log.info(f'wf_setting = {wf_setting}')
             self.settings_repository.save_setting(conn, wf_setting.workflow_key, wf_setting_json)
             

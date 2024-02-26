@@ -26,9 +26,9 @@ class RanksOriginRepository:
                 """
                     SELECT id, name, bonus_percent, min_payment_threshold
                     FROM ranks
-                    WHERE id > %(threshold)s --Пропускаем те объекты, которые уже загрузили.
+                    WHERE id > %(threshold)s --Пропускаю те объекты, которые уже загрузили.
                     ORDER BY id ASC --Обязательна сортировка по id, т.к. id используется в качестве курсора.
-                    LIMIT %(limit)s; --Обрабатываем только одну пачку объектов.
+                    LIMIT %(limit)s; --Обрабатываю только одну пачку объектов.
                 """, {
                     "threshold": rank_threshold,
                     "limit": limit
@@ -74,18 +74,18 @@ class RankLoader:
         self.log = log
 
     def load_ranks(self):
-        # открываем транзакцию.
+        # Открываю транзакцию.
         # Транзакция будет закоммичена, если код в блоке with пройдет успешно (т.е. без ошибок).
         # Если возникнет ошибка, произойдет откат изменений (rollback транзакции).
         with self.pg_dest.connection() as conn:
 
-            # Прочитываем состояние загрузки
+            # Прочитываю состояние загрузки
             # Если настройки еще нет, создаю ее.
             wf_setting = self.settings_repository.get_setting(conn, self.WF_KEY)
             if not wf_setting:
                 wf_setting = EtlSetting(id=0, workflow_key=self.WF_KEY, workflow_settings={self.LAST_LOADED_ID_KEY: -1})
 
-            # Вычитываем очередную пачку объектов.
+            # Вычитываю очередную пачку объектов.
             last_loaded = wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY]
             load_queue = self.origin.list_ranks(last_loaded, self.BATCH_LIMIT)
             self.log.info(f"Found {len(load_queue)} ranks to load.")
@@ -94,15 +94,15 @@ class RankLoader:
                 self.log.info("Quitting.")
                 return
 
-            # Сохраняем объекты в базу dwh.
+            # Сохраняю объекты в базу dwh.
             for rank in load_queue:
                 self.stg.insert_rank(conn, rank)
 
-            # Сохраняем прогресс.
-            # Мы пользуемся тем же connection, поэтому настройка сохранится вместе с объектами,
+            # Сохраняю прогресс.
+            # Пользуюсь тем же connection, поэтому настройка сохранится вместе с объектами,
             # либо откатятся все изменения целиком.
             wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY] = max([t.id for t in load_queue])
-            wf_setting_json = json2str(wf_setting.workflow_settings)  # Преобразуем к строке, чтобы положить в БД.
+            wf_setting_json = json2str(wf_setting.workflow_settings)  # Преобразую к строке, чтобы положить в БД.
             self.settings_repository.save_setting(conn, wf_setting.workflow_key, wf_setting_json)
             self.log.info(f'wf_setting_json = {wf_setting_json}')
 
