@@ -33,12 +33,9 @@ class UsersOriginRepository:
                        update_ts AS update_ts
                     FROM stg.ordersystem_users
 
-                    --SELECT id, (event_ts)::text event_ts, event_type, event_value
-                    --FROM ordersystem_users
-
-                    WHERE id > %(threshold)s --Пропускаем те объекты, которые уже загрузили.
-                    ORDER BY id ASC --Обязательна сортировка по id, т.к. id используем в качестве курсора.
-                    LIMIT %(limit)s; --Обрабатываем только одну пачку объектов.
+                    WHERE id > %(threshold)s --Пропускаю те объекты, которые уже загрузили.
+                    ORDER BY id ASC --Обязательна сортировка по id, т.к. id используется в качестве курсора.
+                    LIMIT %(limit)s; --Обрабатываютолько одну пачку объектов.
                 """, {
                     "threshold": user_threshold,
                     "limit": limit
@@ -84,7 +81,7 @@ class UsersLoader:
         with self.pg_dest.connection() as conn:
 
             # Прочитываем состояние загрузки
-            # Если настройки еще нет, заводим ее.
+            # Если настройки еще нет, создаю ее.
             wf_setting = self.settings_repository.get_setting(conn, self.WF_KEY)
             self.log.info(f'wf_setting = {wf_setting}')
             if not wf_setting:

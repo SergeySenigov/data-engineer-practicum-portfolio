@@ -27,7 +27,7 @@ class RanksOriginRepository:
                     SELECT id, name, bonus_percent, min_payment_threshold
                     FROM ranks
                     WHERE id > %(threshold)s --Пропускаем те объекты, которые уже загрузили.
-                    ORDER BY id ASC --Обязательна сортировка по id, т.к. id используем в качестве курсора.
+                    ORDER BY id ASC --Обязательна сортировка по id, т.к. id используется в качестве курсора.
                     LIMIT %(limit)s; --Обрабатываем только одну пачку объектов.
                 """, {
                     "threshold": rank_threshold,
@@ -64,7 +64,7 @@ class RankDestRepository:
 class RankLoader:
     WF_KEY = "example_ranks_origin_to_stg_workflow"
     LAST_LOADED_ID_KEY = "last_loaded_id"
-    BATCH_LIMIT = 1  # Рангов мало, но мы хотим продемонстрировать инкрементальную загрузку рангов.
+    BATCH_LIMIT = 1  # Рангов мало, но я хочу продемонстрировать инкрементальную загрузку рангов.
 
     def __init__(self, pg_origin: PgConnect, pg_dest: PgConnect, log: Logger) -> None:
         self.pg_dest = pg_dest
@@ -80,7 +80,7 @@ class RankLoader:
         with self.pg_dest.connection() as conn:
 
             # Прочитываем состояние загрузки
-            # Если настройки еще нет, заводим ее.
+            # Если настройки еще нет, создаю ее.
             wf_setting = self.settings_repository.get_setting(conn, self.WF_KEY)
             if not wf_setting:
                 wf_setting = EtlSetting(id=0, workflow_key=self.WF_KEY, workflow_settings={self.LAST_LOADED_ID_KEY: -1})

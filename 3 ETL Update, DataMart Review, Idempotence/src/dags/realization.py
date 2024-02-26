@@ -138,7 +138,7 @@ def f_upload_data_to_staging_hist(filename, date, pg_table, pg_schema, ti):
     postgres_hook = PostgresHook(postgres_conn_id)
     engine = postgres_hook.get_sqlalchemy_engine()
 
-    # удалим имеющуюся информацию в staging за этот день и ранее для исторических данных
+    # удаляю имеющуюся информацию в staging за этот день и ранее для исторических данных
     str_del = f"delete FROM {pg_schema}.{pg_table} WHERE date_time::date < '{date}'" 
     engine.execute(str_del)
 

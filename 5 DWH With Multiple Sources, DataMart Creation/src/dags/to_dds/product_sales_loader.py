@@ -56,18 +56,16 @@ with ss as (
                      select 
                          id AS id,
                          object_id AS order_id,
-                         --(object_value::json->>'bonus_grant')::float AS bonus_grant,
-                         --(object_value::json->>'bonus_payment')::float AS bonus_payment,
                          json_array_elements((object_value::json->>'order_items')::JSON) product_json
                          FROM (select * from stg.ordersystem_orders WHERE id > %(threshold)s ORDER BY id ASC LIMIT %(limit)s) t
                     where object_value::json->>'final_status' = 'CLOSED' -- только успешно закрытые
-                     --Пропускаем те объекты, которые уже загрузили.
-                     --Обязательна сортировка по id, т.к. id используем в качестве курсора.
+                     --Пропускаю те объекты, которые уже загрузили.
+                     --Обязательна сортировка по id, т.к. id используется в качестве курсора.
                     ) t, ss
                     where ss.order_id =  t.order_id 
                     and ss.product_id = t.product_json::JSON->>'id' 
                     and exists (select id from dds.dm_orders o where o.order_key = t.order_id)
-                    ; --Обрабатываем только одну пачку объектов.
+                    ; --Обрабатываю только одну пачку объектов.
                 """, {
                     "threshold": sales_threshold,
                     "limit": limit
@@ -121,7 +119,7 @@ class ProductSalesLoader:
         with self.pg_dest.connection() as conn:
 
             # Прочитываем состояние загрузки
-            # Если настройки еще нет, заводим ее.
+            # Если настройки еще нет, создаю ее.
             wf_setting = self.settings_repository.get_setting(conn, self.WF_KEY)
             self.log.info(f'wf_setting = {wf_setting}')
             if not wf_setting:

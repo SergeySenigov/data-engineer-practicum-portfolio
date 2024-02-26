@@ -33,7 +33,7 @@ class RestaurantsOriginRepository:
                        '2099-12-31 00:00:00' as active_to
                     FROM stg.ordersystem_restaurants
                     WHERE id > %(threshold)s --Пропускаем те объекты, которые уже загрузили.
-                    ORDER BY id ASC --Обязательна сортировка по id, т.к. id используем в качестве курсора.
+                    ORDER BY id ASC --Обязательна сортировка по id, т.к. id используется в качестве курсора.
                     LIMIT %(limit)s; --Обрабатываем только одну пачку объектов.
                 """, {
                     "threshold": restaurant_threshold,
@@ -81,7 +81,7 @@ class RestaurantsLoader:
         with self.pg_dest.connection() as conn:
 
             # Прочитываем состояние загрузки
-            # Если настройки еще нет, заводим ее.
+            # Если настройки еще нет, создаю ее.
             wf_setting = self.settings_repository.get_setting(conn, self.WF_KEY)
             self.log.info(f'wf_setting = {wf_setting}')
             if not wf_setting:

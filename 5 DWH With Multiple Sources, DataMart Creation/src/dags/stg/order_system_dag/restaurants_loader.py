@@ -29,15 +29,15 @@ class RestaurantsLoader:
         with self.pg_dest.connection() as conn:
 
             # Прочитываем состояние загрузки
-            # Если настройки еще нет, заводим ее.
+            # Если настройки еще нет, создаю ее.
             wf_setting = self.settings_repository.get_setting(conn, self.WF_KEY)
             if not wf_setting:
                 wf_setting = EtlSetting(
                     id=0,
                     workflow_key=self.WF_KEY,
                     workflow_settings={
-                        # JSON ничего не знает про даты. Поэтому записываем строку, которую будем кастить при использовании.
-                        # А в БД мы сохраним именно JSON.
+                        # JSON ничего не знает про даты. Поэтому записываю строку, которую буду приводить к типу даты при использовании.
+                        # А в БД сохраню именно JSON.
                         self.LAST_LOADED_TS_KEY: datetime(2022, 1, 1).isoformat()
                     }
                 )

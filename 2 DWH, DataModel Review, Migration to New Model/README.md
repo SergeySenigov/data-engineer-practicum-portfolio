@@ -27,11 +27,11 @@ cloudbeaver
 ## Целевая схема таблиц
 ![Целевая схема таблиц](images/model2.png)
 
-Создадим справочник стоимости доставки в страны shipping_country_rates из данных, указанных в shipping_country и shipping_country_base_rate, сделаем первичный ключ таблицы — серийный id, то есть серийный идентификатор каждой строчки. Справочник будет состоять из уникальных пар полей из таблицы shipping.
+Создаю справочник стоимости доставки в страны shipping_country_rates из данных, указанных в shipping_country и shipping_country_base_rate, создаю первичный ключ таблицы — серийный id, то есть серийный идентификатор каждой строчки. Справочник будет состоять из уникальных пар полей из таблицы shipping.
 
 В соответствии с новой схемой данных в новую таблицу **shipping_country_rates** переносятся поля таблицы shipping: shipping_country, shipping_country_base_rate. 
 
-Изучим переносимые поля shipping_country, shipping_country_base_rate
+Изучаю переносимые поля shipping_country, shipping_country_base_rate
 для определения типов полей в новой таблице:
 ```sql
 SELECT cc.column_name, cc.is_nullable, cc.numeric_precision, cc.numeric_scale,   data_type
@@ -46,7 +46,7 @@ and cc.column_name in ('shipping_country', 'shipping_country_base_rate');
 |shipping_country|YES|||text|
 
 
-Создаем таблицу на основании полученных типов полей. Для shipping_country_id делаем тип serial для автоматического заполнения.
+Создаю таблицу на основании полученных типов полей. Для shipping_country_id выбрал тип serial для автоматического заполнения.
 ```sql
 drop table if exists public.shipping_country_rates;
 
@@ -57,19 +57,19 @@ create table public.shipping_country_rates (
  constraint  shipping_country_rates_p_key primary key  (id));
 ```
 
-Добавим проверочное ограничение check:
+Добавил проверочное ограничение check:
 ```sql
 alter table public.shipping_country_rates add constraint check_sh_cont_base_rate check (shipping_country_base_rate > 0 and shipping_country_base_rate < 1);
 ```
 
-и заполняем справочник из уникальных пар полей из таблицы shipping
+и заполнил справочник из уникальных пар полей из таблицы shipping
 ```sql
 insert into public.shipping_country_rates(shipping_country, shipping_country_base_rate)
 select distinct s.shipping_country, s.shipping_country_base_rate
 from shipping s ;
 ```
 
-Посмотрим результат:
+Смотрю результат:
 ```sql
 select * from public.shipping_country_rates
 limit 10
@@ -81,23 +81,23 @@ limit 10
 |3|germany|0.0100|
 |4|russia|0.0300|
 
-Добавим ограничение уникальности на наименование страны, чтобы  использовать его как ключ
+Добавил ограничение уникальности на наименование страны, чтобы  использовать его как ключ
 ```sql
 alter table public.shipping_country_rates add constraint shipping_country_unique UNIQUE  (shipping_country);
 ```
 
-Создадим справочник тарифов доставки вендора по договору shipping_agreement из данных строки vendor_agreement_description через разделитель :.
+Создаю справочник тарифов доставки вендора по договору shipping_agreement из данных строки vendor_agreement_description через разделитель :.
 Названия полей:
 agreementid,
 agreement_number,
 agreement_rate,
 agreement_commission.
 
-Agreementid сделаем первичным ключом.
+Agreementid делаю первичным ключом.
 
 В соответствии с новой схемой данных в новую таблицу **shipping_agreement** переносятся следующие поля таблицы shipping: vendor_agreement_description. 
 
-Изучим содержимое "склеенного" поля vendor_agreement_description, чтобы понять как его разложить:
+Изучаю содержимое "склеенного" поля vendor_agreement_description, чтобы понять как его разложить:
 ```sql
 select s.id, s.shippingid, s.vendor_agreement_description from public.shipping s
 limit 5
@@ -112,8 +112,8 @@ limit 5
 |5|5|3:vspn-3023:0.05:0.01|
 
 
-Создаем таблицу скриптом.
-Зададим типы полей и обязательность исходя из видимых данных в поле vendor_agreement_description: 
+Создаю таблицу скриптом.
+Задаю типы полей и обязательность исходя из видимых данных в поле vendor_agreement_description: 
 ```sql
 drop table if exists public.shipping_agreement;
 
@@ -125,17 +125,17 @@ create table public.shipping_agreement (
  constraint shipping_agreement_p_key primary key  (agreementid));
 ```
 
-Добавим проверочные ограничения check на числовые поля agreement_rate, agreement_commission:
+Добавляю проверочные ограничения check на числовые поля agreement_rate, agreement_commission:
 ```sql
 alter table public.shipping_agreement add constraint check_agreement_rate check (agreement_rate > 0 and agreement_rate < 1);
 alter table public.shipping_agreement add constraint check_agreement_commission check (agreement_commission > 0 and agreement_commission < 1);
 ```
 
-Заполняем из уникальных комбинаций с помощью distinct, разбивая поле vendor_agreement_description на сегменты встроенной функцией regexp_split_to_array.
+Заполняю из уникальных комбинаций с помощью distinct, разбивая поле vendor_agreement_description на сегменты встроенной функцией regexp_split_to_array.
 
-Поля переводим явно к требуемым типам данных.
+Поля превожу явно к требуемым типам данных.
 
-Для тестирования преобразований типов в первых строках воспользуемся оператором приведения типов "::", а в других - оператором CAST с разными целевыми типами.
+Для тестирования преобразований типов в первых строках использую оператор приведения типов "::", а в других - оператором CAST с разными целевыми типами.
 
 ```sql
 insert into public.shipping_agreement(agreementid, agreement_number, agreement_rate, agreement_commission)
@@ -147,7 +147,7 @@ CAST ( (regexp_split_to_array(s.vendor_agreement_description, E'\\:'))[4] AS DOU
 from public.shipping s
 ```
 
-Посмотрим результат. Возьмем для проверки те agreement_number, которые были выбраны в "предпросмотре" выше:
+Смотрю результат - для проверки те agreement_number, которые были выбраны в "предпросмотре" выше:
 ```sql
 select * from public.shipping_agreement sa
 where sa.agreement_number in ('vspn-4092', 'vspn-366', 'vspn-4148', '3:vspn-3023')
@@ -163,19 +163,19 @@ where sa.agreement_number in ('vspn-4092', 'vspn-366', 'vspn-4148', '3:vspn-3023
 
 Одна строка (27) по номеру agreement_number подтянулась, которой не было выше, так как у нее тот же номер, но другой agreement_rate и agreement_commission.
 
-Заметим себе, что agreement_number не уникально.
+Вижу, что agreement_number не уникально.
 
-Создайдим справочник о типах доставки shipping_transfer из строки shipping_transfer_description через разделитель :.
+Создал справочник о типах доставки shipping_transfer из строки shipping_transfer_description через разделитель :.
 Названия полей:
 transfer_type,
 transfer_model,
 shipping_transfer_rate .
-Сделаем первичный ключ таблицы — серийный id.
+Сделал первичный ключ таблицы — серийный id.
 
 
 В соответствии с новой схемой данных в новую таблицу **shipping_transfer** переносятся следующие поля таблицы shipping: shipping_transfer_description, shipping_transfer_rate.  
 
-Изучим содержание используемых полей shipping_transfer_description и shipping_transfer_rate
+Изучаю содержание используемых полей shipping_transfer_description и shipping_transfer_rate
 ```sql
 select s.shipping_transfer_description, s.shipping_transfer_rate
 from public.shipping s
@@ -189,7 +189,7 @@ limit 5;
 |1p:train|0.025|
 |1p:train|0.025|
 
-На основании видимых данных определим типы полей создаваемой таблицы shipping_transfer
+На основании видимых данных определил типы полей создаваемой таблицы shipping_transfer
 
 ```sql
 drop table if exists public.shipping_transfer ;
@@ -202,17 +202,17 @@ create table public.shipping_transfer (
  constraint shipping_transfer_p_key primary key  (id));
 ```
 
-Добавим проверочное ограничение check:
+Добавил проверочное ограничение check:
 ```sql
 alter table public.shipping_transfer add constraint check_shipping_transfer_rate check (shipping_transfer_rate > 0 and shipping_transfer_rate < 1);
 ```
 
-Заполняем из уникальных комбинаций с помощью distinct, разбивая поле shipping_transfer_description на сегменты встроенной функцией regexp_split_to_array.
-Поля переводим явно к требуемым типам данных.
-Первичный ключ id явно не заполняем, так как он заполнится сам из последовательности благодаря указанию типа SERIAL.
+Заполнил из уникальных комбинаций с помощью distinct, разбивая поле shipping_transfer_description на сегменты встроенной функцией regexp_split_to_array.
+Поля перевожу явно к требуемым типам данных.
+Первичный ключ id явно не заполняю, так как он заполнится сам из последовательности благодаря указанию типа SERIAL.
 Тип serial8 соответствует int8. 
 
-Можно указать также:
+Указал также:
 
 serial = integer = int4, 
 
@@ -229,7 +229,7 @@ CAST ( s.shipping_transfer_rate AS DOUBLE PRECISION)
 from public.shipping s
 ```
 
-Посмотрим результат:
+Смотрю результат:
 ```sql
 select * from public.shipping_transfer
 limit 5
@@ -244,11 +244,11 @@ limit 5
 |5|1p|multiplie|0.0500|
 
 
-Создадим таблицу shipping_info с уникальными доставками shippingid и свяжем её с созданными справочниками shipping_country_rates, shipping_agreement, shipping_transfer и константной информацией о доставке shipping_plan_datetime, payment_amount, vendorid.
+Создал таблицу shipping_info с уникальными доставками shippingid и связал её с созданными справочниками shipping_country_rates, shipping_agreement, shipping_transfer и константной информацией о доставке shipping_plan_datetime, payment_amount, vendorid.
 
 В соответствии с новой схемой данных в новую таблицу **shipping_info** переносятся следующие поля таблицы shipping: shipping_plan_datetime, payment_amount, vendorid. 
 
-Изучим переносимые поля таблицы shipping_plan_datetime, payment_amount, vendorid
+Изучаю переносимые поля таблицы shipping_plan_datetime, payment_amount, vendorid
 для определения типа в новой таблице:
 ```sql
 SELECT cc.column_name, cc.is_nullable, cc.numeric_precision, cc.numeric_scale,   data_type
@@ -264,9 +264,9 @@ and cc.column_name in ('shipping_plan_datetime', 'payment_amount', 'vendorid');
 |vendorid|YES|64|0|bigint|
 
 
-На основании полученных типов данных зададим типы полей создаваемой таблицы shipping_info.
+На основании полученных типов данных задал типы полей создаваемой таблицы shipping_info.
 Уникальный ключ shippingid - типа int8, берем из shipping.
-Добавим ограничения - связи типа foreign key с созданными ранее справочниками:
+Добавил ограничения - связи типа foreign key с созданными ранее справочниками:
 
 ```sql
 drop table if exists public.shipping_info ;
@@ -288,12 +288,12 @@ create table public.shipping_info (
  alter table public.shipping_info add constraint shipping_agreementid_fkey foreign key (agreementid) references shipping_agreement(agreementid);
 ```
 
-Добавим проверочное ограничение check:
+Добавил проверочное ограничение check:
 ```sql
 alter table public.shipping_info add constraint check_payment_amount check (payment_amount > 0);
 ```
 
-Напишем запрос из shipping с группировкой для заполнения созданной таблицы:
+Составил запрос из shipping с группировкой для заполнения созданной таблицы:
 ```sql
 insert into public.shipping_info(shippingid, vendorid, payment_amount, shipping_plan_datetime, transfer_type_id, shipping_country_id, agreementid)
 with st as (select id as transfer_type_id, transfer_type, transfer_model
@@ -310,7 +310,7 @@ left join st on (regexp_split_to_array(s.shipping_transfer_description, E'\\:'))
 left join scr on s.shipping_country = scr.shipping_country;
 ```
 
-Посмотрим результат:
+Вижу результат:
 ```sql
 select * from public.shipping_info
 limit 5;
@@ -325,11 +325,11 @@ limit 5;
 |42345|2|6.57|2022-03-01 13:49:52.397|4|3|11|
 
 
-Создадим таблицу статусов о доставке shipping_status и включим туда информацию из лога shipping (status , state). Добавим  вычисляемую информацию по фактическому времени доставки shipping_start_fact_datetime, shipping_end_fact_datetime. Отразим для каждого уникального shippingid его итоговое состояние доставки.
+Создадал таблицу статусов о доставке shipping_status и включил туда информацию из лога shipping (status , state). Добавил вычисляемую информацию по фактическому времени доставки shipping_start_fact_datetime, shipping_end_fact_datetime. Добавил для каждого уникального shippingid его итоговое состояние доставки.
 
 В соответствии с новой схемой данных в новую таблицу **shipping_status** переносятся следующие поля таблицы shipping: shippingid, status, state.
 
-Изучим переносимые поля таблицы shipping для задания типов в новой таблице:
+Изучил переносимые поля таблицы shipping для задания типов в новой таблице:
 ```sql
 SELECT cc.column_name, cc.is_nullable, cc.numeric_precision, cc.numeric_scale,   data_type
 FROM  information_schema.columns cc
@@ -343,7 +343,7 @@ and cc.column_name in ('shippingid', 'status', 'state');
 |state|YES|||text|
 |status|YES|||text|
 
-На основании полученных типов данных зададим типы полей создаваемой таблицы shipping_status.
+На основании полученных типов данных зададал типы полей создаваемой таблицы shipping_status.
 Уникальный ключ будет shippingid типа int8.
 
 Поле shipping_end_fact_datetime может быть NULL, так как не все заказы завершены.
@@ -361,13 +361,13 @@ create table public.shipping_status (
  alter table public.shipping_status add constraint shipping_status_p_key primary key (shippingid) ;
 ```
 
-Добавим проверочное ограничение check на status и state:
+Добавил проверочное ограничение check на status и state:
 ```sql
 alter table public.shipping_status add constraint check_status check (status in ('in_progress', 'finished'));
 alter table public.shipping_status add constraint check_dates check (shipping_start_fact_datetime <= shipping_end_fact_datetime);
 ```
 
-Заполним таблицу запросом:
+Заполнил таблицу запросом:
 
 ```sql
 insert into public.shipping_status(shippingid, status, state, shipping_start_fact_datetime, shipping_end_fact_datetime)
@@ -383,7 +383,7 @@ left join ts on s.shippingid = ts.shippingid
 ;
 ```
 
-Посмотрим результат:
+Смотрю результат:
 ```sql
 select * from public.shipping_status
 limit 5;
@@ -397,7 +397,7 @@ limit 5;
 |1122|finished|recieved|2021-08-18 07:27:37.784|2021-09-05 20:41:08.091|
 |3492|finished|recieved|2021-08-23 08:15:17.097|2021-08-25 13:27:53.011|
 
-Проверим все ли в порядке с полнотой заполнения, сгруппировав по status, state
+Проверил, все ли в порядке с полнотой заполнения, сгруппировав по status, state
 ```sql
 select status, state, count(1)
 from shipping_status ss
@@ -411,7 +411,7 @@ order by status, state
 |in_progress|pending|1247|
 
 
-Еще проверим даты, разбив все строки на автоматически сгенерированных интервалах. Число интервалов возьмем 6.
+Дополнительно проверил даты, разбив все строки на автоматически сгенерированных интервалах. Число интервалов беру 6.
 ```sql
 with intvl as (select 
 	date_trunc('day', (max(shipping_start_fact_datetime) - min(shipping_start_fact_datetime))/6 + interval '1 day') iv
@@ -438,7 +438,7 @@ order by ds
 
 Итого 54174 - равно количеству shippingid
 
-Создадим представление shipping_datamart на основании готовых таблиц для аналитики и включим в него:
+Создал представление shipping_datamart на основании готовых таблиц для аналитики и включим в него:
 shippingid 
 vendorid
 transfer_type — тип доставки из таблицы shipping_transfer
@@ -455,10 +455,10 @@ payment_amount — сумма платежа пользователя
 vat — итоговый налог на доставку. Высчитывается как: payment_amount * ( shipping_country_base_rate + agreement_rate + shipping_transfer_rate) .
 profit — итоговый доход компании с доставки. Высчитывается как: payment_amount * agreement_commission.
 
- Создаем итоговую витрину **shipping_datamart** как представление из таблиц shipping, shipping_status, shipping_agreement:
+ Создал итоговую витрину **shipping_datamart** как представление из таблиц shipping, shipping_status, shipping_agreement:
 
- Для вычисления числа полных дней, используем функцию DATE_PART('day', interval).
- Таблицы соединяем через left join.
+ Для вычисления числа полных дней использую функцию DATE_PART('day', interval).
+ Таблицы соединяю через left join.
 
  ```sql
  create or replace view public.shipping_datamart as (
@@ -479,7 +479,7 @@ profit — итоговый доход компании с доставки. В�
  left join public.shipping_transfer st on st.id = si.transfer_type_id);
  ```
 
- Посмотрим результат:
+ Смотрю итоговый результат:
 ```sql
 select * from public.shipping_datamart
 limit 5;

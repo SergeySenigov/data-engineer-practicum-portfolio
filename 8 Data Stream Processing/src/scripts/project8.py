@@ -18,12 +18,12 @@ TOPIC_NAME_IN = 'student.topic.cohortXX.senigser.in'
 def foreach_batch_function(df, epoch_id):
 
     try:
-        # сохраняем df в памяти, чтобы не создавать df заново перед отправкой в Kafka
+        # сохраняю df в памяти, чтобы не создавать df заново перед отправкой в Kafka
         df = df.withColumn("trigger_datetime_created", lit(int(round(datetime.utcnow().timestamp())))) 
 
         df = df.persist()
 
-        # записываем df в PostgreSQL с полем feedback
+        # записываю df в PostgreSQL с полем feedback
         
         url = "jdbc:postgresql://localhost:5432/XXX"
         properties = {
@@ -41,7 +41,7 @@ def foreach_batch_function(df, epoch_id):
             .write.jdbc(url=url, table=table, mode="append",
                             properties=properties)
         
-        # создаём df для отправки в Kafka. Сериализация в json.
+        # создаю df для отправки в Kafka. Сериализация в json.
         result = (df.withColumn('value', \
             to_json(\
             struct( col('restaurant_id'), 
@@ -58,7 +58,7 @@ def foreach_batch_function(df, epoch_id):
             )).select('value')
         
         # ...
-        # отправляем сообщения в результирующий топик Kafka без поля feedback
+        # отправляю сообщения в результирующий топик Kafka без поля feedback
         out_query = (result
                 .write
                 .format("kafka")
@@ -67,21 +67,21 @@ def foreach_batch_function(df, epoch_id):
                 .option("topic", TOPIC_NAME_OUT)
                 .save())
         
-        # очищаем память от df
+        # очищаю память от df
         df.unpersist()
     
     except Exception as e:
     # Обработка ошибки
         print("An error occurred:", str(e))
 
-# необходимые библиотеки для интеграции Spark с Kafka и PostgreSQL
+# импортирую необходимые библиотеки для интеграции Spark с Kafka и PostgreSQL
 spark_jars_packages = ",".join(
         [
             "org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0",
             "org.postgresql:postgresql:42.4.0",
         ]
     )
-# создаём spark сессию с необходимыми библиотеками в spark_jars_packages для интеграции с Kafka и PostgreSQL
+# создаю spark сессию с необходимыми библиотеками в spark_jars_packages для интеграции с Kafka и PostgreSQL
 spark = SparkSession.builder \
     .appName("RestaurantSubscribeStreamingService") \
     .config("spark.sql.session.timeZone", "UTC") \
@@ -89,7 +89,7 @@ spark = SparkSession.builder \
     .getOrCreate()
 
 try: 
-    # читаем из топика Kafka сообщения с акциями от ресторанов
+    # читаю из топика Kafka сообщения с акциями от ресторанов
     restaurant_read_stream_df = spark.readStream \
         .format('kafka') \
         .option('kafka.bootstrap.servers', 'XXX.mdb.yandexcloud.net:9091') \
@@ -97,7 +97,7 @@ try:
         .options(**kafka_security_options) \
         .load()
     
-    # определяем схему входного сообщения для json
+    # определяю схему входного сообщения для json
     incomming_message_schema = StructType( \
             [StructField("restaurant_id", StringType()), \
             StructField("adv_campaign_id", StringType()),\
@@ -109,10 +109,10 @@ try:
             StructField("datetime_created", LongType())\
             ])
 
-    # определяем текущее время в UTC в миллисекундах
+    # определяю текущее время в UTC в миллисекундах
     current_timestamp_utc = int(round(datetime.utcnow().timestamp()))
 
-    # десериализуем из value сообщения json и фильтруем по времени старта и окончания акции
+    # десериализую из value сообщения json и фильтрую по времени старта и окончания акции
     restaurant_read_stream_df = restaurant_read_stream_df \
         .withColumn('value', restaurant_read_stream_df.value.cast(StringType()))\
         .withColumn('values_struct', from_json(col("value"), incomming_message_schema))\
@@ -126,7 +126,7 @@ except Exception as e:
     print("An error occurred while reading from Kafka:", str(e))
 
 try:
-    # вычитываем всех пользователей с подпиской на рестораны
+    # вычитываю всех пользователей с подпиской на рестораны
     subscribers_restaurant_df = spark.read \
         .format('jdbc') \
         .option('url', 'jdbc:postgresql://XXX.mdb.yandexcloud.net:6432/de') \
@@ -139,13 +139,13 @@ except Exception as e:
     print("An error occurred while reading from PostgreSQL:", str(e))
 
 try:
-    # джойним данные из сообщения Kafka с пользователями подписки по restaurant_id (uuid). Добавляем время создания события.
+    # соединяю данные из сообщения Kafka с пользователями подписки по restaurant_id (uuid). Добавляю время создания события.
     result_df = filtered_read_stream_df.join(subscribers_restaurant_df, "restaurant_id", 'inner')
 except Exception as e:
     print("An error occurred while joining data from stream and from PostgreSQL:", str(e))
 
 try:
-    # запускаем стриминг
+    # запускаю стриминг
     query = result_df.writeStream \
         .foreachBatch(foreach_batch_function) \
         .start() \
@@ -153,5 +153,4 @@ try:
 except Exception as e:
     print("An error occurred while streaming:", str(e))
 finally:
-    # Make closing actions (release resource for example)
     query.stop() 

@@ -41,10 +41,10 @@ class ProductsOriginRepository:
                          update_ts AS update_ts,
                          json_array_elements((object_value::json->>'order_items')::JSON) product_json
                     FROM (select * from stg.ordersystem_orders t WHERE id > %(threshold)s LIMIT %(limit)s) t
-                     --Пропускаем те объекты, которые уже загрузили.
-                    ORDER BY id ASC --Обязательна сортировка по id, т.к. id используем в качестве курсора.
+                     --Пропускаю те объекты, которые уже загрузили.
+                    ORDER BY id ASC --Обязательна сортировка по id, т.к. id используется в качестве курсора.
                     ) t
-                    ; --Обрабатываем только одну пачку объектов.
+                    ; --Обрабатываю только одну пачку объектов.
                 """, {
                     "threshold": products_threshold,
                     "limit": limit
@@ -101,7 +101,7 @@ class ProductsLoader:
         with self.pg_dest.connection() as conn:
 
             # Прочитываем состояние загрузки
-            # Если настройки еще нет, заводим ее.
+            # Если настройки еще нет, создаю ее.
             wf_setting = self.settings_repository.get_setting(conn, self.WF_KEY)
             self.log.info(f'wf_setting = {wf_setting}')
             if not wf_setting:

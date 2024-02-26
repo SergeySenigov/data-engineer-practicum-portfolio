@@ -23,21 +23,21 @@ class UsersLoader:
         self.log = logger
 
     def run_copy(self) -> int:
-        # открываем транзакцию.
+        # открываю транзакцию.
         # Транзакция будет закоммичена, если код в блоке with пройдет успешно (т.е. без ошибок).
         # Если возникнет ошибка, произойдет откат изменений (rollback транзакции).
         with self.pg_dest.connection() as conn:
 
-            # Прочитываем состояние загрузки
-            # Если настройки еще нет, заводим ее.
+            # Прочитываю состояние загрузки
+            # Если настройки еще нет, создаю ее.
             wf_setting = self.settings_repository.get_setting(conn, self.WF_KEY)
             if not wf_setting:
                 wf_setting = EtlSetting(
                     id=0,
                     workflow_key=self.WF_KEY,
                     workflow_settings={
-                        # JSON ничего не знает про даты. Поэтому записываем строку, которую будем кастить при использовании.
-                        # А в БД мы сохраним именно JSON.
+                        # JSON ничего не знает про даты. Поэтому записываю строку, которую буду приводить к типу даты при использовании.
+                        # А в БД сохраню именно JSON.
                         self.LAST_LOADED_TS_KEY: datetime(2022, 1, 1).isoformat()
                     }
                 )

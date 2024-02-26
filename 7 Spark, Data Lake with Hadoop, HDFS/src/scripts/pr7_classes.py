@@ -797,7 +797,7 @@ class Users(object):
         #  |-- date: date (nullable = true)
     
         
-        # добавим колонки "actual_city" по последнему _сообщению_ пользователя
+        # добавляю колонки "actual_city" по последнему _сообщению_ пользователя
         # это первая строка из окна событий по user_id с сортировкой по типу события "message" и дате по убыванию
         # если в первой строке событие не "message", значит у пользователя вообще нет сообщений
         # тогда не заполняем, там может быть другой тип события
@@ -809,11 +809,11 @@ class Users(object):
          .withColumn('actual_lat',     F.when( F.first('event_type', ignorenulls = True).over(w1) == 'message', F.first('lat').over(w1) ))\
          .withColumn('actual_lon',    F.when( F.first('event_type', ignorenulls = True).over(w1) == 'message', F.first('lon').over(w1) ))
 
-        # для проверки на полноту информации сделаем поле last_message_id
+        # для проверки на полноту информации создал поле last_message_id
         self.df = self.df\
          .withColumn('last_message_id', F.when( F.first('event_type', ignorenulls = True).over(w1) == 'message', F.first('message_id').over(w1) ))
         
-        # добавим колонки "last_event_city" по последнему сообытию пользователя
+        # добавил колонки "last_event_city" по последнему сообытию пользователя
         # это первая строка из окна событий по user_id с сортировкой по дате по убыванию
         # если у события нет города, то останется пустым
         w2 = Window().partitionBy('user_id').orderBy(F.col('date').desc())
@@ -1164,7 +1164,7 @@ class UsersNear(object):
            .withColumnRenamed('actual_city_id', 'city_id_right')\
            .withColumnRenamed('actual_city', 'city_right')
         
-        # сделаем repartition обоих входных датасетов, чтобы умножение прошло на многих исполнителях
+        # сделаю repartition обоих входных датасетов, чтобы умножение прошло на многих исполнителях
         
         self.usersLeft.df = self.usersLeft.df.repartition(100)
         self.usersRight.df = self.usersRight.df.repartition(100)

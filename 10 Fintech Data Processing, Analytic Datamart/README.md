@@ -31,7 +31,7 @@ PythonOperator
 
 ![Схема_решения_проекта](images/Схема_решения_проекта.png)
 
-Используются пакеты `boto3`, `vertica_python`.
+Использую пакеты `boto3`, `vertica_python`.
 
 Первый DAG [s3_to_vertica_dag.py](src/dags/s3_to_vertica_dag.py) выгружает файлы из S3, фильтрует ранее загруженные, записывает данные в слой STG в Vertica и запускает второй DAG с помощью TriggerDagRunOperator, передавая ему дату {{ ds }} из AirFlow. 
 

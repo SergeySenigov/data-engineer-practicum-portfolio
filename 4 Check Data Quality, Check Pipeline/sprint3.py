@@ -79,7 +79,6 @@ def check_report(ti, api_endpoint , headers):
             report_id = response_dict['data']['report_id']
             break
     
-    #тут соответствуенно если report_id не объявлен то есть не было сукксесса то в ошибку упадет и инженер идет разбираться почему
     ti.xcom_push(key='report_id', value=report_id)
     print(f"report_id is {report_id}")
     return report_id

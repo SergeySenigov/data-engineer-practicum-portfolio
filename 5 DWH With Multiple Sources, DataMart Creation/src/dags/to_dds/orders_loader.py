@@ -45,7 +45,7 @@ class OrdersOriginRepository:
                        update_ts AS update_ts
                        FROM stg.ordersystem_orders
                        WHERE id > %(threshold)s --Пропускаем те объекты, которые уже загрузили.
-                       ORDER BY id ASC --Обязательна сортировка по id, т.к. id используем в качестве курсора.
+                       ORDER BY id ASC --Обязательна сортировка по id, т.к. id используется в качестве курсора.
                        LIMIT %(limit)s --Обрабатываем только одну пачку объектов.
                     ) t 
                     where exists (select id from dds.dm_timestamps dt where dt.ts = t.order_ts) 
@@ -97,7 +97,7 @@ class OrdersLoader:
         with self.pg_dest.connection() as conn:
 
             # Прочитываем состояние загрузки
-            # Если настройки еще нет, заводим ее.
+            # Если настройки еще нет, создаю ее.
             wf_setting = self.settings_repository.get_setting(conn, self.WF_KEY)
             self.log.info(f'wf_setting = {wf_setting}')
             if not wf_setting:

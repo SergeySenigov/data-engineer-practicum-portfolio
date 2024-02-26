@@ -56,33 +56,33 @@ BashOperator
 
 **Этап 1 - Модифицировать процессы в пайплайне**
 
-Так как в инкрементальных данных появилось новое поле status, то добавим его в таблицу staging.user_order_log. 
+Так как в инкрементальных данных появилось новое поле status, то добавил его в таблицу staging.user_order_log. 
 
-Сделаем новое поле status обязательным и заполним старые записи значением 'shipped'.
+Сделал новое поле status обязательным и заполнил старые записи значением 'shipped'.
 
 Скрипт /migrations/1_add_staging_uol_field_status.sql:
 ```sql
 alter table staging.user_order_log add column status varchar(30) default 'shipped' not null;
 ```
 
-Добавим в витрину mart.f_sales новое поле refund_flag типа boolean для контроля заполнения
+Добавил в витрину mart.f_sales новое поле refund_flag типа boolean для контроля заполнения
 
 Скрипт /migrations/2_add_mart_f_sales_field_refund_flag.sql:
 ```sql
 alter table mart.f_sales add column refund_flag boolean default false not null;
 ```
 
-Не будем изменять в коде алгоритм заполнения refunded в слое staging (менять значения на минусы), чтобы сохранить полностью оригинальные данные.
+Не буду изменять в коде алгоритм заполнения refunded в слое staging (менять значения на минусы), чтобы сохранить полностью оригинальные данные.
 
-Будем передавать в запросе формирования данных витрины из staging.user_order_log в mart.f_sales суммы 
+Буду передавать в запросе формирования данных витрины из staging.user_order_log в mart.f_sales суммы 
 в поля quantity и payment_amount для записей со статусом refunded с минусами. 
 
-Для чего сделаем новый скрипт. 
+Для чего создал новый скрипт. 
 Чтобы данные можно было обновлять за выборочные дни без удаления и дублирования, выполним в этом же скрипте запрос удаления ранее загруженных данных за эту дату.
 
 Так как данные за конкретную дату грузятся только этим процессом и не агрегируются в витрине, то нарушений не будет.
 
-Для инкрементов и исторических данных скрипт будем немного различаться, так как в первом случае грузятся данные только за одну дату (условная дата запуска - ds), во втором - за произвольные даты до даты ds.
+Для инкрементов и исторических данных скрипт будет немного различаться, так как в первом случае грузятся данные только за одну дату (условная дата запуска - ds), во втором - за произвольные даты до даты ds.
 
 
 [Скрипт для инкрементов /migrations/mart.f_sales_inc.sql](migrations/mart.f_sales_inc.sql)
@@ -116,7 +116,7 @@ left join mart.d_calendar as dc on uol.date_time::Date = dc.date_actual
 where uol.date_time::Date < '{{ds}}';
 ```
 
-В файле настройки DAG сделаем для загрузки исторических данных второй DAG, в котором создадим свой набор задач (с префиксом h_).
+В файле настройки DAG создал для загрузки исторических данных второй DAG, в котором создал свой набор задач (с префиксом h_).
 
 Изменим вызов в DAG
 ```sql
@@ -157,7 +157,7 @@ print (df.groupby(['date_time', 'status']).agg({'status': 'count', 'quantity': '
 **Этап 2 - Реализовать новую витрину**
 
 Создаем витрину по требуемой структуре.
-Сделаем внешний ключ по item_id к mart.d_item.
+Сделал внешний ключ по item_id к mart.d_item.
 
 ```sql
 drop table if exists mart.f_customer_retention ;
@@ -195,14 +195,14 @@ create table mart.f_customer_retention (
     TABLESPACE pg_default;
 ```
 
-Для заполнения по историческим данным сделаем запрос из 
+Для заполнения по историческим данным сделал запрос из 
 [/migrations/mart.f_customer_retention_hist.sql](migrations/mart.f_customer_retention_hist.sql)
 
-Для заполнения по историческим данным сделаем запрос из 
+Для заполнения по историческим данным сделал запрос из 
 [/migrations/mart.f_customer_retention_inc.sql](migrations/mart.f_customer_retention_inc.sql)
 
 
-В оба DAG добавим соответствующие задачи типа PostgresOperator: 
+В оба DAG добавляю соответствующие задачи типа PostgresOperator: 
 ```sql
     h_update_f_customer_retention = PostgresOperator(
         task_id='update_f_customer_retention',
