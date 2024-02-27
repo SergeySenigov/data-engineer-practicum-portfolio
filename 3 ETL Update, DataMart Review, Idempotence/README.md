@@ -218,7 +218,7 @@ create table mart.f_customer_retention (
         parameters={"date": {business_dt}} )
 ```
 
-Внесем их в дерево выполнения:
+Вношу их в дерево выполнения:
 ```sql
     (
             h_print_info_task 

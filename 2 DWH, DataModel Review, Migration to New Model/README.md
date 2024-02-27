@@ -265,7 +265,7 @@ and cc.column_name in ('shipping_plan_datetime', 'payment_amount', 'vendorid');
 
 
 На основании полученных типов данных задал типы полей создаваемой таблицы shipping_info.
-Уникальный ключ shippingid - типа int8, берем из shipping.
+Уникальный ключ shippingid - типа int8, беру из shipping.
 Добавил ограничения - связи типа foreign key с созданными ранее справочниками:
 
 ```sql
@@ -325,7 +325,7 @@ limit 5;
 |42345|2|6.57|2022-03-01 13:49:52.397|4|3|11|
 
 
-Создадал таблицу статусов о доставке shipping_status и включил туда информацию из лога shipping (status , state). Добавил вычисляемую информацию по фактическому времени доставки shipping_start_fact_datetime, shipping_end_fact_datetime. Добавил для каждого уникального shippingid его итоговое состояние доставки.
+Создал таблицу статусов о доставке shipping_status и включил туда информацию из лога shipping (status , state). Добавил вычисляемую информацию по фактическому времени доставки shipping_start_fact_datetime, shipping_end_fact_datetime. Добавил для каждого уникального shippingid его итоговое состояние доставки.
 
 В соответствии с новой схемой данных в новую таблицу **shipping_status** переносятся следующие поля таблицы shipping: shippingid, status, state.
 

@@ -1413,7 +1413,7 @@ class Report2(object):
 
 
         # связать два датасета по user_id
-        # из users берем actual_city, last_event_city
+        # из users беру actual_city, last_event_city
         # из userTravels home_city, travel_count, travel_array
         self.df = self.users.df.join(self.userTravels.df, 'user_id', 'outer')
 
