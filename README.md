@@ -1,7 +1,6 @@
 ## Проекты курса Инженер данных на платформе Yandex Practicum  
-Проекты специализации Data Engineer, созданные в ходе курса Yandex Practicum  
 
-| Проект              | Цели проекта           | Используемые технологии, библиотеки, инструменты| Навыки |
+| Project              | Goals           | Stack & Tools | Activities |
 | :-------------------- | :--------------------- |:---------------------------|:---------------------------|
 | [Data Cleansing, User Retention DataMart](</1 Data Cleansing, User Retention DataMart Creation/README.md>)         | Проверить качество исходных данных (пропуски, повторы, форматы, некорректные записи)   <P><P>Создать витрины данных для RFM-классификации пользователей           | SQL, CTE, Window Functions, PostgreSQL, cloudbeaver | Расширил навыки использования оконных функций, встроенных в `PostgreSQL` механизмов проверок данных <P><P>Реализовал `Common Table Expression`, использовал `cloudbeaver`
 | [DataModel Review, Migration To A New Model](</2 DWH, DataModel Review, Migration to New Model/README.md>) | Мигрировать данные в отдельные логические таблицы  <P><P>Создать витрину данных для новой модели данных   | SQL, Window Functions, PostgreSQL, cloudbeaver          | Освоил принципы построения `DataWareHouse`, состав и назначение слоев хранилища данных
