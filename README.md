@@ -3,7 +3,7 @@
 | Проект                         | Технологии, инструменты, библиотеки  |
 | :-------------------- | :--------------------- |
 | [Проверка качества данных. Витрина метрики RFM.](</01 Проверка качества данных. Витрина метрики RFM./README.md>)         | SQL, Common Table Expression, Window Functions, PostgreSQL, cloudbeaver 
-| [Модификация DWH. Миграция в новую модель.](</02 Модификация DWH. Миграция в новую модель./README.md>) | SQL, Window Functions, PostgreSQL, cloudbeaver     
+| [Модификация DWH. Миграция данных в новую модель.](</02 Модификация DWH. Миграция в новую модель./README.md>) | SQL, Window Functions, PostgreSQL, cloudbeaver     
 | [Модификация ETL и витрины. Реализация идемпотентности.](</03 Модификация ETL и витрины. Реализация идемпотентности./README.md>)      | AirFlow, SQL, PostgreSQL, cloudbeaver, bash, pandas, SQLAlchemy, PostgresOperator, BashOperator    
 | [Проверки качества данных в ETL](</04 Проверки качества данных в ETL/README.md>)     | AirFlow, SQL, PostgreSQL    
 | [Витрина на DWH из нескольких источников](</05 Витрина на DWH из нескольких источников/README.md>)    | Airflow, PostgreSQL, MongoDB Compass, pendulum, Jupyter Notebook, bash, SQLAlchemy, PostgresHook    |
