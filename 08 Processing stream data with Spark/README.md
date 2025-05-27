@@ -36,7 +36,7 @@ Spark Streaming
 
 -->
 
-## Реализация
+## Implementation
 
 Для разработки и отладки использую [Python Notebook](src/scripts/project8.ipynb)
 

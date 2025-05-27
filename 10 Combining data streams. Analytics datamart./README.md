@@ -34,7 +34,7 @@ PythonOperator
 
 -->
 
-## Реализация
+## Implementation
 
 Выбрана следующа схема выгрузки данных из хранилища S3 и загрузки в Vertica с помощью DAG AirFlow.
 

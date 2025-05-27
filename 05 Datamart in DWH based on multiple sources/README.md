@@ -34,7 +34,7 @@ PostgresHook
 Оформить необходимую документацию для передачи результатов заказчику.  
 -->
 
-## Реализация
+## Implementation
 
 Исследование API получения данных о доставках содержится 
  в ноутбуке [Inspect API And Data Model.ipynb](<Inspect API And Data Model.ipynb>)

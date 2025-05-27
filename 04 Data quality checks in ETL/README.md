@@ -29,7 +29,7 @@ pandas
 3. Число клиентов в файлах user_order_log и user_activity_log должно быть больше трёх. Ещё одна критичная проверка — при обнаружении в файлах трёх и менее клиентов загрузка остановится.
 -->
 
-## Реализация
+## Implementation
 
 Исходный DAG
 ![DAG To Add Checks.png](images/DAG_to_add_checks.png)
